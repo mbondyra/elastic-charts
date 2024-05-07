@@ -6,6 +6,7 @@
  * Side Public License, v 1.
  */
 
+import { EuiFlexGroup } from '@elastic/eui';
 import classNames from 'classnames';
 import React, { Component, CSSProperties } from 'react';
 
@@ -124,7 +125,7 @@ export class LegendListItem extends Component<LegendItemProps> {
 
     if (isItemHidden) return null;
 
-    const itemClassNames = classNames('echLegendItem', 'echLegend__background', {
+    const itemClassNames = classNames('echLegendItem', {
       'echLegendItem--hidden': isSeriesHidden,
       'echLegendItem--vertical': positionConfig.direction === LayoutDirection.Vertical,
     });
@@ -140,32 +141,51 @@ export class LegendListItem extends Component<LegendItemProps> {
       : {
           [isMostlyRTL ? 'marginRight' : 'marginLeft']: LEGEND_HIERARCHY_MARGIN * (item.depth ?? 0),
         };
-    return (
-      <>
-        <li
-          className={itemClassNames}
-          onMouseEnter={this.onLegendItemMouseOver}
-          onMouseLeave={this.onLegendItemMouseOut}
-          style={style}
-          dir={isMostlyRTL ? 'rtl' : 'ltr'}
-          data-ech-series-name={label}
-        >
-          <LegendColorPickerComponent {...this.props} />
-          <ItemLabel
-            label={label}
-            options={labelOptions}
-            isToggleable={totalItems > 1 && item.isToggleable}
-            onToggle={this.onLabelToggle(seriesIdentifiers)}
-            isSeriesHidden={isSeriesHidden}
-          />
 
-          {legendValueItems?.map((l) => <LegendValueComponent key={l.type} {...l} />)}
-          <ActionComponent Action={Action} series={seriesIdentifiers} color={color} label={label} />
-        </li>
-      </>
+    console.log(legendValueItems, legendValues);
+    return (
+      <div
+        role="row"
+        className={itemClassNames}
+        onMouseEnter={this.onLegendItemMouseOver}
+        onMouseLeave={this.onLegendItemMouseOut}
+        // style={style}
+        dir={isMostlyRTL ? 'rtl' : 'ltr'}
+        data-ech-series-name={label}
+      >
+        <LegendTableCell>
+          <div className="newClassname">
+            <LegendColorPickerComponent {...this.props} />
+            <ItemLabel
+              label={label}
+              options={labelOptions}
+              isToggleable={totalItems > 1 && item.isToggleable}
+              onToggle={this.onLabelToggle(seriesIdentifiers)}
+              isSeriesHidden={isSeriesHidden}
+            />
+          </div>
+        </LegendTableCell>
+
+        {legendValueItems?.map((l) => (
+          <LegendTableCell>
+            <LegendValueComponent key={l.type} {...l} />
+          </LegendTableCell>
+        ))}
+        <ActionComponent Action={Action} series={seriesIdentifiers} color={color} label={label} />
+
+        {/* <div className="echLegendBackground" /> */}
+      </div>
     );
   }
 }
+
+const LegendTableCell = ({ children, className = '' }: { children: React.ReactNode; className: string }) => {
+  return (
+    <div role="gridcell" className={className}>
+      {children}
+    </div>
+  );
+};
 
 const LegendValueComponent = ({ label }: LegendItemValue) => {
   return (
@@ -190,8 +210,10 @@ const ActionComponent = ({
     return null;
   }
   return (
-    <div className="echLegendItem__action">
-      <Action series={series} color={color} label={label} />
-    </div>
+    <LegendTableCell>
+      <div className="echLegendItem__action">
+        <Action series={series} color={color} label={label} />
+      </div>
+    </LegendTableCell>
   );
 };

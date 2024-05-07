@@ -6,11 +6,10 @@
  * Side Public License, v 1.
  */
 
-import { first } from 'lodash';
 import React from 'react';
 
 import { LegendItem, LegendItemExtraValues, LegendValue } from '../../common/legend';
-import { LegendPositionConfig } from '../../specs/settings';
+import { LegendAction, LegendPositionConfig } from '../../specs/settings';
 import { LegendLabelOptions } from '../../utils/themes/theme';
 
 /** @internal */
@@ -23,10 +22,11 @@ export interface LegendHeaderProps {
   legendValues: Array<LegendValue>;
   isMostlyRTL: boolean;
   labelOptions: LegendLabelOptions;
+  action?: LegendAction;
 }
 
 /** @internal */
-export const LegendListHeader = ({ items }: LegendHeaderProps) => {
+export const LegendTableHeader = ({ items, action }: LegendHeaderProps) => {
   if (items.length === 0) {
     return null;
   }
@@ -41,15 +41,21 @@ export const LegendListHeader = ({ items }: LegendHeaderProps) => {
   }
 
   return (
-    <li className="echLegendItem echLegendItem--vertical">
-      <div className="echLegendItem__label echLegendItem__label echLegendItem__label--clickable echLegendItem__label--singleline">
-        TITLE
-      </div>
-      {item.values.map((l, i) => (
-        <div className="echLegendItem__legendValue" key={`${l.value}-${i}`}>
-          {l.title}
+    <div role="rowgroup">
+      <div role="row" className="echLegendItem echLegendItem__header echLegendItem--vertical">
+        <div
+          role="gridcell"
+          className="echLegendItem__label echLegendItem__label echLegendItem__label--clickable echLegendItem__label--singleline"
+        >
+          {/* TITLE */}
         </div>
-      ))}
-    </li>
+        {item.values.map((l, i) => (
+          <div role="gridcell" className="echLegendItem__legendValue" key={`${l.value}-${i}`}>
+            {l.title}
+          </div>
+        ))}
+        {action && <div role="gridcell" />}
+      </div>
+    </div>
   );
 };

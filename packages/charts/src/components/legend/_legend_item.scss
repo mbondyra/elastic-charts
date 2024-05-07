@@ -3,6 +3,45 @@
 $legendItemVerticalPadding: $echLegendRowGap / 2;
 $legendItemHeight: #{$euiFontSizeXS * $euiLineHeight};
 
+@mixin echLegendBackground {
+  &:hover::before {
+    background-color: $euiColorLightestShade;
+  }
+
+  &::before {
+    background-color: $euiColorLightestShade;
+    content: ' ';
+    position: absolute;
+    top: $legendItemVerticalPadding / 2;
+    bottom: $legendItemVerticalPadding / 2;
+    right: 0;
+    left: 0;
+    z-index: -1;
+  }
+}
+
+.newClassname {
+  align-items: flex-start;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  position: relative;
+  gap: 4px;
+}
+
+.echLegendItem__header {
+  font-weight: 600;
+}
+
+.echLegendBackground{
+  width: 100%;
+  grid-row: 1 / -1;
+  grid-column: 1 / -1;
+  background: red;
+  position: absolute;
+  @include echLegendBackground;
+}
+
 .echLegendItem {
   color: $euiTextColor;
   display: flex;
@@ -10,6 +49,21 @@ $legendItemHeight: #{$euiFontSizeXS * $euiLineHeight};
   justify-content: space-between;
   align-items: flex-start;
   position: relative;
+
+  // &:hover::before {
+  //   background-color: $euiColorLightestShade;
+  // }
+
+  // &::before {
+  //   background-color: $euiColorLightestShade;
+  //   content: ' ';
+  //   position: absolute;
+  //   top: $legendItemVerticalPadding / 2;
+  //   bottom: $legendItemVerticalPadding / 2;
+  //   right: 0;
+  //   left: 0;
+  //   z-index: -1;
+  // }
 
   // wrapper is needed to isolate color icon when wrapped or not
   .colorWrapper > *:first-of-type {
@@ -34,25 +88,14 @@ $legendItemHeight: #{$euiFontSizeXS * $euiLineHeight};
     }
   }
 
+  &[dir='rtl'] .echLegendItem__legendValue {
+    text-align: left;
+  } 
+
   &:not(&--hidden) {
     .echLegendItem__color--changable {
       cursor: pointer;
     }
-  }
-
-
-  &.echLegend__background:hover::before {
-    background-color: $euiColorLightestShade;
-  }
-
-  &.echLegend__background::before {
-    content: ' ';
-    position: absolute;
-    top: $legendItemVerticalPadding / 2;
-    bottom: $legendItemVerticalPadding / 2;
-    right: 0;
-    left: 0;
-    z-index: -1;
   }
 
   &__action {
