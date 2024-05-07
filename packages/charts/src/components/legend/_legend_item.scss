@@ -18,18 +18,18 @@ $legendItemHeight: #{$euiFontSizeXS * $euiLineHeight};
     height: $legendItemHeight;
   }
 
-  &:not([dir='rtl']) > *:not(.background) {
+  &:not([dir='rtl']) > * {
     margin-left: $euiSizeXS;
 
-    &:last-child:not(.echLegendItem__extra) {
+    &:last-child:not(.echLegendItem__legendValue) {
       margin-right: $euiSizeXS;
     }
   }
 
-  &[dir='rtl'] > *:not(.background) {
+  &[dir='rtl'] > * {
     margin-right: $euiSizeXS;
 
-    &:last-child:not(.echLegendItem__extra) {
+    &:last-child:not(.echLegendItem__legendValue) {
       margin-left: $euiSizeXS;
     }
   }
@@ -40,15 +40,17 @@ $legendItemHeight: #{$euiFontSizeXS * $euiLineHeight};
     }
   }
 
-  &:hover .background {
+
+  &.echLegend__background:hover::before {
     background-color: $euiColorLightestShade;
   }
 
-  .background {
+  &.echLegend__background::before {
+    content: ' ';
     position: absolute;
-    top: 0;
+    top: $legendItemVerticalPadding / 2;
+    bottom: $legendItemVerticalPadding / 2;
     right: 0;
-    bottom: 0;
     left: 0;
     z-index: -1;
   }
@@ -103,7 +105,7 @@ $legendItemHeight: #{$euiFontSizeXS * $euiLineHeight};
     }
   }
 
-  &__extra {
+  &__legendValue {
     @include euiFontSizeXS;
     text-align: right;
     flex: 0 0 auto;
@@ -119,11 +121,6 @@ $legendItemHeight: #{$euiFontSizeXS * $euiLineHeight};
 
     &:first-of-type {
       margin-top: $legendItemVerticalPadding / 2;
-    }
-
-    .background {
-      margin-top: $legendItemVerticalPadding / 2;
-      margin-bottom: $legendItemVerticalPadding / 2;
     }
   }
 

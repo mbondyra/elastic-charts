@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 import { Dispatch, bindActionCreators } from 'redux';
 
 import { CustomLegend } from './custom_legend';
+import { LegendListHeader } from './legend_header';
 import { LegendItemProps, LegendListItem } from './legend_item';
 import { getLegendPositionConfig, legendPositionStyle } from './position_style';
 import { getLegendStyle, getLegendListStyle } from './style_utils';
@@ -133,6 +134,7 @@ function LegendComponent(props: LegendStateProps & LegendDispatchProps) {
       ) : (
         <div style={containerStyle} className="echLegendListContainer">
           <ul style={listStyle} className="echLegendList">
+            <LegendListHeader items={items} {...itemProps} />
             {items.map((item, index) => (
               <LegendListItem key={`${index}`} item={item} {...itemProps} />
             ))}

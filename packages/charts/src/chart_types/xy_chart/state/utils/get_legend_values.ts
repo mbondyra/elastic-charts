@@ -26,6 +26,63 @@ import { LegendValue } from '../../../../common/legend';
 import { ScaleType } from '../../../../scales/constants';
 import { XDomain } from '../../domains/types';
 import { DataSeries, DataSeriesDatum } from '../../utils/series';
+import { TickFormatter } from '../../utils/specs';
+
+/** @internal */
+export function nonNullable<T>(v: T): v is NonNullable<T> {
+  return v !== null || v !== undefined;
+}
+
+const legendValueTitlesMap = {
+  [LegendValue.None]: '',
+  [LegendValue.CurrentAndLastValue]: '',
+  [LegendValue.Value]: '',
+  [LegendValue.Percent]: '',
+  [LegendValue.LastValue]: 'Last',
+  [LegendValue.LastNonNullValue]: 'Last non-null',
+  [LegendValue.FirstValue]: 'First',
+  [LegendValue.FirstNonNullValue]: 'First non-null',
+  [LegendValue.Average]: 'AVG',
+  [LegendValue.Median]: 'MEDIAN',
+  [LegendValue.Min]: 'MIN',
+  [LegendValue.Max]: 'MAX',
+  [LegendValue.Total]: 'TOTAL',
+  [LegendValue.Count]: 'COUNT',
+  [LegendValue.DistinctCount]: 'DISTINCT COUNT',
+  [LegendValue.Variance]: 'VARIANCE',
+  [LegendValue.StdDeviation]: 'STD DEVIATION',
+  [LegendValue.Range]: 'RANGE',
+  [LegendValue.Difference]: 'DIFFERENCE',
+  [LegendValue.DifferencePercent]: 'DIFFERENCE %',
+};
+
+/**
+ * This method return legend values from a DataSeries that correspond to the type of value requested.
+ * It in general compute the last, min, max, avg, sum of the value in a series.
+ * @internal
+ */
+export function getLegendValues(
+  series: DataSeries,
+  xDomain: XDomain,
+  types: LegendValue[],
+  valueAccessor: (d: DataSeriesDatum) => number | null,
+  formatter: TickFormatter<any> | ((tick: unknown) => string),
+) {
+  return types
+    .map((type) => {
+      const value = getLegendValue(series, xDomain, type, valueAccessor);
+      if (value === null) {
+        return null;
+      }
+      return {
+        type,
+        title: legendValueTitlesMap[type],
+        label: formatter(value),
+        value,
+      };
+    })
+    .filter(nonNullable);
+}
 
 /**
  * This method return a value from a DataSeries that correspond to the type of value requested.
