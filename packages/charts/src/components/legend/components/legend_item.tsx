@@ -9,34 +9,36 @@
 import classNames from 'classnames';
 import React, { Component, CSSProperties } from 'react';
 
-import { LegendTableCell } from './components/legend_table_cell';
-import { LegendTableRow } from './components/legend_table_row';
-import { Label as ItemLabel } from './label';
-import { LegendColorPicker as LegendColorPickerComponent } from './legend_color_picker';
-import { getExtra } from './utils';
-import { nonNullable } from '../../chart_types/xy_chart/state/utils/get_legend_values';
-import { LegendItem, LegendItemExtraValues, LegendItemValue, LegendValue } from '../../common/legend';
-import { SeriesIdentifier } from '../../common/series_id';
+import { LegendActionComponent } from './legend_action';
+import { LegendTableCell } from './legend_table_cell';
+import { LegendTableRow } from './legend_table_row';
+import { LegendValueComponent } from './legend_value';
+import { nonNullable } from '../../../chart_types/xy_chart/state/utils/get_legend_values';
+import { LegendItem, LegendItemExtraValues, LegendValue } from '../../../common/legend';
+import { SeriesIdentifier } from '../../../common/series_id';
 import {
   LegendItemListener,
   BasicListener,
   LegendAction,
   LegendPositionConfig,
   LegendColorPicker,
-} from '../../specs/settings';
+} from '../../../specs/settings';
 import {
   clearTemporaryColors as clearTemporaryColorsAction,
   setTemporaryColor as setTemporaryColorAction,
   setPersistedColor as setPersistedColorAction,
-} from '../../state/actions/colors';
+} from '../../../state/actions/colors';
 import {
   onLegendItemOutAction,
   onLegendItemOverAction,
   onToggleDeselectSeriesAction,
-} from '../../state/actions/legend';
-import { LayoutDirection } from '../../utils/common';
-import { deepEqual } from '../../utils/fast_deep_equal';
-import { LegendLabelOptions } from '../../utils/themes/theme';
+} from '../../../state/actions/legend';
+import { LayoutDirection } from '../../../utils/common';
+import { deepEqual } from '../../../utils/fast_deep_equal';
+import { LegendLabelOptions } from '../../../utils/themes/theme';
+import { Label as ItemLabel } from '../label';
+import { LegendColorPicker as LegendColorPickerComponent } from '../legend_color_picker';
+import { getExtra } from '../utils';
 
 /** @internal */
 export const LEGEND_HIERARCHY_MARGIN = 10;
@@ -178,39 +180,10 @@ export class LegendListItem extends Component<LegendItemProps> {
             </LegendTableCell>
           );
         })}
-        <ActionComponent Action={Action} series={seriesIdentifiers} color={color} label={label} />
+        <LegendTableCell>
+          <LegendActionComponent Action={Action} series={seriesIdentifiers} color={color} label={label} />
+        </LegendTableCell>
       </LegendTableRow>
     );
   }
 }
-
-const LegendValueComponent = ({ label }: LegendItemValue) => {
-  return (
-    <div className="echLegendItem__legendValue" title={`${label}`}>
-      {label}
-    </div>
-  );
-};
-
-const ActionComponent = ({
-  Action,
-  series,
-  color,
-  label,
-}: {
-  Action?: LegendAction;
-  series: SeriesIdentifier[];
-  color: string;
-  label: string;
-}) => {
-  if (!Action) {
-    return null;
-  }
-  return (
-    <LegendTableCell>
-      <div className="echLegendItem__action">
-        <Action series={series} color={color} label={label} />
-      </div>
-    </LegendTableCell>
-  );
-};
