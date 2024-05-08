@@ -3,7 +3,7 @@
 $legendItemVerticalPadding: $echLegendRowGap / 2;
 $legendItemHeight: #{$euiFontSizeXS * $euiLineHeight};
 
-.newClassname {
+.echLegendItem__seriesItem {
   align-items: flex-start;
   display: flex;
   flex-wrap: nowrap;
@@ -33,11 +33,6 @@ $legendItemHeight: #{$euiFontSizeXS * $euiLineHeight};
 
 .echLegendItem {
   color: $euiTextColor;
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  align-items: flex-start;
-
   // wrapper is needed to isolate color icon when wrapped or not
   .colorWrapper > *:first-of-type {
     // euiPopover adds a div with height of 19px otherwise

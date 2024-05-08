@@ -143,8 +143,6 @@ export class LegendListItem extends Component<LegendItemProps> {
       })
       .filter(nonNullable);
 
-    console.log(item.values, 'legendValueItems');
-
     const style: CSSProperties = flatLegend
       ? {}
       : {
@@ -156,12 +154,12 @@ export class LegendListItem extends Component<LegendItemProps> {
         className={itemClassNames}
         onMouseEnter={this.onLegendItemMouseOver}
         onMouseLeave={this.onLegendItemMouseOut}
-        // style={style}
+        style={style}
         dir={isMostlyRTL ? 'rtl' : 'ltr'}
         data-ech-series-name={label}
       >
         <LegendTableCell>
-          <div className="newClassname">
+          <div className="echLegendItem__seriesItem">
             <LegendColorPickerComponent {...this.props} />
             <ItemLabel
               label={label}
