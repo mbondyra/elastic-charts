@@ -11,12 +11,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch, bindActionCreators } from 'redux';
 
+import { LegendTable } from './components/legend_table';
+import { LegendTableBody } from './components/legend_table_body';
+import { LegendTableHeader } from './components/legend_table_header';
 import { CustomLegend } from './custom_legend';
-import { LegendTableHeader } from './legend_header';
 import { LegendItemProps, LegendListItem } from './legend_item';
 import { getLegendPositionConfig, legendPositionStyle } from './position_style';
 import { getLegendStyle, getLegendListStyle } from './style_utils';
-import { LegendItem, LegendItemExtraValues } from '../../common/legend';
+import { LegendItem, LegendItemExtraValues, LegendValue } from '../../common/legend';
 import { DEFAULT_LEGEND_CONFIG, LegendSpec } from '../../specs';
 import { clearTemporaryColors, setTemporaryColor, setPersistedColor } from '../../state/actions/colors';
 import {
@@ -113,9 +115,7 @@ function LegendComponent(props: LegendStateProps & LegendDispatchProps) {
     labelOptions: legend.labelOptions,
     flatLegend: config.flatLegend ?? DEFAULT_LEGEND_CONFIG.flatLegend,
   };
-  console.log(items[0]);
   const positionStyle = legendPositionStyle(config, size, chartDimensions, containerDimensions);
-  const gridRowLength = (config.legendAction ? 1 : 0) + (items[0]?.values.length ?? 0);
 
   return (
     <div className={legendClasses} style={positionStyle} dir={isMostlyRTL ? 'rtl' : 'ltr'}>
@@ -135,33 +135,11 @@ function LegendComponent(props: LegendStateProps & LegendDispatchProps) {
           />
         </div>
       ) : (
-        <div className="echLegendTableContainer">
-          <div
-            role="table"
-            style={{
-              ...listStyle,
-              gridTemplateColumns: `minmax(100px, 1fr) repeat(${gridRowLength}, auto)`,
-            }}
-            className="echLegendTable"
-          >
-            <LegendTableHeader items={items} {...itemProps} />
-            <LegendTableBody items={items} {...itemProps} />
-          </div>
-        </div>
+        <LegendTable items={items} {...itemProps} listStyle={listStyle} />
       )}
     </div>
   );
 }
-
-const LegendTableBody = ({ items, ...rest }: { items: LegendItem[]; rest: Omit<LegendItemProps, 'item'> }) => {
-  return (
-    <div role="rowgroup">
-      {items.map((item, index) => (
-        <LegendListItem key={`${index}`} item={item} {...rest} />
-      ))}
-    </div>
-  );
-};
 
 const mapDispatchToProps = (dispatch: Dispatch): LegendDispatchProps =>
   bindActionCreators(

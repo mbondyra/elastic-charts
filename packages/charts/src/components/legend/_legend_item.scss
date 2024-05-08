@@ -8,7 +8,6 @@ $legendItemHeight: #{$euiFontSizeXS * $euiLineHeight};
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-between;
-  position: relative;
   gap: 4px;
 }
 
@@ -16,21 +15,21 @@ $legendItemHeight: #{$euiFontSizeXS * $euiLineHeight};
   font-weight: 600;
 }
 
-.echLegendTableCell:hover {
-  background-color: $euiColorLightestShade;
+.echLegendItem--highlightable {
+  .echLegend__tableCell:hover {
+    background-color: $euiColorLightestShade;
+  }
+  
+  .echLegend__tableCell:hover ~ .echLegend__tableCell {
+    background-color: $euiColorLightestShade;
+  }
+  
+  .echLegend__tableCell:has(~ .echLegend__tableCell:hover) {
+    background-color: $euiColorLightestShade;
+  }
 }
 
-.echLegendTableCell ~ .echLegendTableCell:hover {
-  background-color: $euiColorLightestShade;
-}
 
-.echLegendTableCell:hover ~ .echLegendTableCell {
-  background-color: $euiColorLightestShade;
-}
-
-.echLegendTableCell:has(~ .echLegendTableCell:hover) {
-  background-color: $euiColorLightestShade;
-}
 
 .echLegendItem {
   color: $euiTextColor;

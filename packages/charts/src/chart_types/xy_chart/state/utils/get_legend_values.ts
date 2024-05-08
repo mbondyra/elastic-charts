@@ -33,8 +33,8 @@ export function nonNullable<T>(v: T): v is NonNullable<T> {
   return v !== null || v !== undefined;
 }
 
-const legendValueTitlesMap = {
-  [LegendValue.None]: '',
+/** @internal */
+export const legendValueTitlesMap = {
   [LegendValue.CurrentAndLastValue]: 'VAL',
   [LegendValue.Value]: 'VAL',
   [LegendValue.Percent]: 'PCT',
@@ -69,7 +69,6 @@ export function getLegendValues(
   formatter: TickFormatter<any> | ((tick: unknown) => string),
 ) {
   return types
-    .filter((type) => type !== LegendValue.None)
     .map((type) => {
       const value = getLegendValue(series, xDomain, type, valueAccessor) ?? '-';
 
@@ -136,7 +135,6 @@ export function getLegendValue(
     case LegendValue.DifferencePercent:
       return differencePercent(series.data, valueAccessor);
     default:
-    case LegendValue.None:
       return null;
   }
 }

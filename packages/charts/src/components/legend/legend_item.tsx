@@ -9,10 +9,13 @@
 import classNames from 'classnames';
 import React, { Component, CSSProperties } from 'react';
 
+import { LegendTableCell } from './components/legend_table_cell';
+import { LegendTableRow } from './components/legend_table_row';
 import { Label as ItemLabel } from './label';
 import { LegendColorPicker as LegendColorPickerComponent } from './legend_color_picker';
 import { getExtra } from './utils';
-import { LegendItem, LegendItemExtraValues, LegendValue } from '../../common/legend';
+import { nonNullable } from '../../chart_types/xy_chart/state/utils/get_legend_values';
+import { LegendItem, LegendItemExtraValues, LegendItemValue, LegendValue } from '../../common/legend';
 import { SeriesIdentifier } from '../../common/series_id';
 import {
   LegendItemListener,
@@ -39,8 +42,7 @@ import { LegendLabelOptions } from '../../utils/themes/theme';
 export const LEGEND_HIERARCHY_MARGIN = 10;
 
 /** @internal */
-export interface LegendItemProps {
-  item: LegendItem;
+export interface SharedLegendItemProps {
   flatLegend: boolean;
   totalItems: number;
   positionConfig: LegendPositionConfig;
@@ -59,6 +61,11 @@ export interface LegendItemProps {
   setTemporaryColorAction: typeof setTemporaryColorAction;
   setPersistedColorAction: typeof setPersistedColorAction;
   toggleDeselectSeriesAction: typeof onToggleDeselectSeriesAction;
+}
+
+/** @internal */
+export interface LegendItemProps extends SharedLegendItemProps {
+  item: LegendItem;
 }
 
 /** @internal */
@@ -122,17 +129,21 @@ export class LegendListItem extends Component<LegendItemProps> {
 
     if (isItemHidden) return null;
 
-    const itemClassNames = classNames('echLegendItem', {
+    const itemClassNames = classNames('echLegendItem', 'echLegendItem--highlightable', {
       'echLegendItem--hidden': isSeriesHidden,
       'echLegendItem--vertical': positionConfig.direction === LayoutDirection.Vertical,
     });
 
-    const legendValueItems = item.values.map((v) => {
-      if (v.type === LegendValue.CurrentAndLastValue) {
-        return getExtra(extraValues, item, totalItems);
-      }
-      return v;
-    });
+    const legendValueItems = item.values
+      .map((v) => {
+        if (v.type === LegendValue.CurrentAndLastValue) {
+          return getExtra(extraValues, item, totalItems);
+        }
+        return v;
+      })
+      .filter(nonNullable);
+
+    console.log(item.values, 'legendValueItems');
 
     const style: CSSProperties = flatLegend
       ? {}
@@ -141,8 +152,7 @@ export class LegendListItem extends Component<LegendItemProps> {
         };
 
     return (
-      <div
-        role="row"
+      <LegendTableRow
         className={itemClassNames}
         onMouseEnter={this.onLegendItemMouseOver}
         onMouseLeave={this.onLegendItemMouseOut}
@@ -151,7 +161,6 @@ export class LegendListItem extends Component<LegendItemProps> {
         data-ech-series-name={label}
       >
         <LegendTableCell>
-          {/* <div className="echLegendBackground" /> */}
           <div className="newClassname">
             <LegendColorPickerComponent {...this.props} />
             <ItemLabel
@@ -164,24 +173,19 @@ export class LegendListItem extends Component<LegendItemProps> {
           </div>
         </LegendTableCell>
 
-        {legendValueItems?.map((l) => (
-          <LegendTableCell key={l.type}>
-            <LegendValueComponent {...l} />
-          </LegendTableCell>
-        ))}
+        {legendValueItems?.map((l, i) => {
+          console.log(l, 'legendValueItems');
+          return (
+            <LegendTableCell key={l?.type || i}>
+              <LegendValueComponent {...l} />
+            </LegendTableCell>
+          );
+        })}
         <ActionComponent Action={Action} series={seriesIdentifiers} color={color} label={label} />
-      </div>
+      </LegendTableRow>
     );
   }
 }
-
-const LegendTableCell = ({ children, className = '' }: { children: React.ReactNode; className: string }) => {
-  return (
-    <div role="gridcell" className={classNames('echLegendTableCell', className)}>
-      {children}
-    </div>
-  );
-};
 
 const LegendValueComponent = ({ label }: LegendItemValue) => {
   return (

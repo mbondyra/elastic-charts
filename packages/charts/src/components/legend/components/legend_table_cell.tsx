@@ -10,7 +10,6 @@ import classNames from 'classnames';
 import React, { PropsWithChildren } from 'react';
 
 import { LegendCellStyle } from './types';
-import { isNonNullablePrimitiveValue } from '../../../utils/common';
 
 /** @public */
 export type LegendTableCellProps = PropsWithChildren<{
@@ -22,21 +21,13 @@ export type LegendTableCellProps = PropsWithChildren<{
 }>;
 
 /** @public */
-export const LegendTableCell = ({
-  style,
-  truncate = false,
-  tagName = 'td',
-  className,
-  children,
-  title: manualTitle,
-}: LegendTableCellProps) => {
+export const LegendTableCell = ({ style, truncate = false, className, children }: LegendTableCellProps) => {
   const classes = classNames('echLegend__tableCell', className, {
     'echLegend__tableCell--truncate': truncate,
   });
 
-  const title = manualTitle ?? (truncate && isNonNullablePrimitiveValue(children) ? `${children}` : undefined);
   return (
-    <div role={tagName === 'th' ? 'rowheader' : 'gridcell'} className={classes} style={style} title={title}>
+    <div role="gridcell" className={classes} style={style}>
       {children}
     </div>
   );
