@@ -35,25 +35,25 @@ export function nonNullable<T>(v: T): v is NonNullable<T> {
 
 const legendValueTitlesMap = {
   [LegendValue.None]: '',
-  [LegendValue.CurrentAndLastValue]: '',
-  [LegendValue.Value]: '',
-  [LegendValue.Percent]: '',
-  [LegendValue.LastValue]: 'Last',
-  [LegendValue.LastNonNullValue]: 'Last non-null',
-  [LegendValue.FirstValue]: 'First',
-  [LegendValue.FirstNonNullValue]: 'First non-null',
+  [LegendValue.CurrentAndLastValue]: 'VAL',
+  [LegendValue.Value]: 'VAL',
+  [LegendValue.Percent]: 'PCT',
+  [LegendValue.LastValue]: 'LVL',
+  [LegendValue.LastNonNullValue]: 'LN',
+  [LegendValue.FirstValue]: 'FRST',
+  [LegendValue.FirstNonNullValue]: 'FN',
   [LegendValue.Average]: 'AVG',
-  [LegendValue.Median]: 'MEDIAN',
+  [LegendValue.Median]: 'MED',
   [LegendValue.Min]: 'MIN',
   [LegendValue.Max]: 'MAX',
-  [LegendValue.Total]: 'TOTAL',
-  [LegendValue.Count]: 'COUNT',
-  [LegendValue.DistinctCount]: 'DISTINCT COUNT',
-  [LegendValue.Variance]: 'VARIANCE',
-  [LegendValue.StdDeviation]: 'STD DEVIATION',
-  [LegendValue.Range]: 'RANGE',
-  [LegendValue.Difference]: 'DIFFERENCE',
-  [LegendValue.DifferencePercent]: 'DIFFERENCE %',
+  [LegendValue.Total]: 'TOT',
+  [LegendValue.Count]: 'CNT',
+  [LegendValue.DistinctCount]: 'DC',
+  [LegendValue.Variance]: 'VAR',
+  [LegendValue.StdDeviation]: 'STD',
+  [LegendValue.Range]: 'RNG',
+  [LegendValue.Difference]: 'DIFF',
+  [LegendValue.DifferencePercent]: 'DPC',
 };
 
 /**
@@ -69,15 +69,14 @@ export function getLegendValues(
   formatter: TickFormatter<any> | ((tick: unknown) => string),
 ) {
   return types
+    .filter((type) => type !== LegendValue.None)
     .map((type) => {
-      const value = getLegendValue(series, xDomain, type, valueAccessor);
-      if (value === null) {
-        return null;
-      }
+      const value = getLegendValue(series, xDomain, type, valueAccessor) ?? '-';
+
       return {
         type,
         title: legendValueTitlesMap[type],
-        label: formatter(value),
+        label: typeof value === 'number' ? formatter(value) : '-',
         value,
       };
     })

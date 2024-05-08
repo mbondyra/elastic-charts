@@ -6,14 +6,12 @@
  * Side Public License, v 1.
  */
 
-import { EuiFlexGroup } from '@elastic/eui';
 import classNames from 'classnames';
 import React, { Component, CSSProperties } from 'react';
 
 import { Label as ItemLabel } from './label';
 import { LegendColorPicker as LegendColorPickerComponent } from './legend_color_picker';
 import { getExtra } from './utils';
-import { nonNullable } from '../../chart_types/xy_chart/state/utils/get_legend_values';
 import { LegendItem, LegendItemExtraValues, LegendValue } from '../../common/legend';
 import { SeriesIdentifier } from '../../common/series_id';
 import {
@@ -113,7 +111,6 @@ export class LegendListItem extends Component<LegendItemProps> {
     const {
       extraValues,
       item,
-      legendValues,
       totalItems,
       action: Action,
       positionConfig,
@@ -130,11 +127,12 @@ export class LegendListItem extends Component<LegendItemProps> {
       'echLegendItem--vertical': positionConfig.direction === LayoutDirection.Vertical,
     });
 
-    const legendValueItems = legendValues
-      .map((v, i) => {
-        return v === LegendValue.CurrentAndLastValue ? getExtra(extraValues, item, totalItems) : item.values[i];
-      })
-      .filter(nonNullable);
+    const legendValueItems = item.values.map((v) => {
+      if (v.type === LegendValue.CurrentAndLastValue) {
+        return getExtra(extraValues, item, totalItems);
+      }
+      return v;
+    });
 
     const style: CSSProperties = flatLegend
       ? {}
@@ -142,7 +140,6 @@ export class LegendListItem extends Component<LegendItemProps> {
           [isMostlyRTL ? 'marginRight' : 'marginLeft']: LEGEND_HIERARCHY_MARGIN * (item.depth ?? 0),
         };
 
-    console.log(legendValueItems, legendValues);
     return (
       <div
         role="row"
@@ -154,6 +151,7 @@ export class LegendListItem extends Component<LegendItemProps> {
         data-ech-series-name={label}
       >
         <LegendTableCell>
+          {/* <div className="echLegendBackground" /> */}
           <div className="newClassname">
             <LegendColorPickerComponent {...this.props} />
             <ItemLabel
@@ -167,13 +165,11 @@ export class LegendListItem extends Component<LegendItemProps> {
         </LegendTableCell>
 
         {legendValueItems?.map((l) => (
-          <LegendTableCell>
-            <LegendValueComponent key={l.type} {...l} />
+          <LegendTableCell key={l.type}>
+            <LegendValueComponent {...l} />
           </LegendTableCell>
         ))}
         <ActionComponent Action={Action} series={seriesIdentifiers} color={color} label={label} />
-
-        {/* <div className="echLegendBackground" /> */}
       </div>
     );
   }
@@ -181,7 +177,7 @@ export class LegendListItem extends Component<LegendItemProps> {
 
 const LegendTableCell = ({ children, className = '' }: { children: React.ReactNode; className: string }) => {
   return (
-    <div role="gridcell" className={className}>
+    <div role="gridcell" className={classNames('echLegendTableCell', className)}>
       {children}
     </div>
   );

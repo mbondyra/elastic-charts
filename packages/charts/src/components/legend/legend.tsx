@@ -140,7 +140,7 @@ function LegendComponent(props: LegendStateProps & LegendDispatchProps) {
             role="table"
             style={{
               ...listStyle,
-              gridTemplateColumns: `minmax(0, 1fr) repeat(${gridRowLength}, auto)`,
+              gridTemplateColumns: `minmax(100px, 1fr) repeat(${gridRowLength}, auto)`,
             }}
             className="echLegendTable"
           >

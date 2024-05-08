@@ -43,18 +43,15 @@ export const LegendTableHeader = ({ items, action }: LegendHeaderProps) => {
   return (
     <div role="rowgroup">
       <div role="row" className="echLegendItem echLegendItem__header echLegendItem--vertical">
-        <div
-          role="gridcell"
-          className="echLegendItem__label echLegendItem__label echLegendItem__label--clickable echLegendItem__label--singleline"
-        >
+        <div role="gridcell" className=" echLegendTableCell">
           {/* TITLE */}
         </div>
         {item.values.map((l, i) => (
-          <div role="gridcell" className="echLegendItem__legendValue" key={`${l.value}-${i}`}>
+          <div role="gridcell" className="echLegendTableCell echLegendItem__legendValue" key={`${l.value}-${i}`}>
             {l.title}
           </div>
         ))}
-        {action && <div role="gridcell" />}
+        {action && <div role="gridcell" className="echLegendTableCell" />}
       </div>
     </div>
   );

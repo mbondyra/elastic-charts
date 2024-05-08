@@ -3,23 +3,6 @@
 $legendItemVerticalPadding: $echLegendRowGap / 2;
 $legendItemHeight: #{$euiFontSizeXS * $euiLineHeight};
 
-@mixin echLegendBackground {
-  &:hover::before {
-    background-color: $euiColorLightestShade;
-  }
-
-  &::before {
-    background-color: $euiColorLightestShade;
-    content: ' ';
-    position: absolute;
-    top: $legendItemVerticalPadding / 2;
-    bottom: $legendItemVerticalPadding / 2;
-    right: 0;
-    left: 0;
-    z-index: -1;
-  }
-}
-
 .newClassname {
   align-items: flex-start;
   display: flex;
@@ -33,13 +16,20 @@ $legendItemHeight: #{$euiFontSizeXS * $euiLineHeight};
   font-weight: 600;
 }
 
-.echLegendBackground{
-  width: 100%;
-  grid-row: 1 / -1;
-  grid-column: 1 / -1;
-  background: red;
-  position: absolute;
-  @include echLegendBackground;
+.echLegendTableCell:hover {
+  background-color: $euiColorLightestShade;
+}
+
+.echLegendTableCell ~ .echLegendTableCell:hover {
+  background-color: $euiColorLightestShade;
+}
+
+.echLegendTableCell:hover ~ .echLegendTableCell {
+  background-color: $euiColorLightestShade;
+}
+
+.echLegendTableCell:has(~ .echLegendTableCell:hover) {
+  background-color: $euiColorLightestShade;
 }
 
 .echLegendItem {
@@ -50,20 +40,18 @@ $legendItemHeight: #{$euiFontSizeXS * $euiLineHeight};
   align-items: flex-start;
   position: relative;
 
-  // &:hover::before {
-  //   background-color: $euiColorLightestShade;
-  // }
+  .echLegendBackground {
+    width: 100%;
+    grid-row: 1 / -1;
+    grid-column: 1 / -1;
+    position: absolute;
+    height: 1.2em;
+    z-index: -1;
+  }
+  &:hover .echLegendBackground {
+    background-color: $euiColorLightestShade;
+  }
 
-  // &::before {
-  //   background-color: $euiColorLightestShade;
-  //   content: ' ';
-  //   position: absolute;
-  //   top: $legendItemVerticalPadding / 2;
-  //   bottom: $legendItemVerticalPadding / 2;
-  //   right: 0;
-  //   left: 0;
-  //   z-index: -1;
-  // }
 
   // wrapper is needed to isolate color icon when wrapped or not
   .colorWrapper > *:first-of-type {
@@ -73,18 +61,18 @@ $legendItemHeight: #{$euiFontSizeXS * $euiLineHeight};
   }
 
   &:not([dir='rtl']) > * {
-    margin-left: $euiSizeXS;
+    padding-left: $euiSizeS;
 
     &:last-child:not(.echLegendItem__legendValue) {
-      margin-right: $euiSizeXS;
+      padding-right: $euiSizeS;
     }
   }
 
   &[dir='rtl'] > * {
-    margin-right: $euiSizeXS;
+    padding-right: $euiSizeXS;
 
     &:last-child:not(.echLegendItem__legendValue) {
-      margin-left: $euiSizeXS;
+      padding-left: $euiSizeXS;
     }
   }
 
@@ -152,7 +140,7 @@ $legendItemHeight: #{$euiFontSizeXS * $euiLineHeight};
     @include euiFontSizeXS;
     text-align: right;
     flex: 0 0 auto;
-    margin-left: $euiSizeXS;
+    padding-left: $euiSizeS;
     font-feature-settings: 'tnum';
     letter-spacing: unset;
     direction: ltr;
