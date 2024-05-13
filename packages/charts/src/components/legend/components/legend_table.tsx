@@ -8,10 +8,10 @@
 
 import React from 'react';
 
+import { SharedLegendItemProps } from './legend_item';
 import { LegendTableBody } from './legend_table_body';
 import { LegendTableHeader } from './legend_table_header';
 import { LegendItem } from '../../../common/legend';
-import { SharedLegendItemProps } from '../legend_item';
 import { LegendListStyle } from '../style_utils';
 
 /** @internal */

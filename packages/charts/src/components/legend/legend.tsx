@@ -11,11 +11,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch, bindActionCreators } from 'redux';
 
+import { LegendTable } from './components/legend_table';
 import { CustomLegend } from './custom_legend';
 import { LegendItemProps, LegendListItem } from './legend_item';
 import { getLegendPositionConfig, legendPositionStyle } from './position_style';
 import { getLegendStyle, getLegendListStyle } from './style_utils';
-import { LegendItem, LegendItemExtraValues } from '../../common/legend';
+import { LegendItem, LegendItemExtraValues, LegendValue } from '../../common/legend';
 import { DEFAULT_LEGEND_CONFIG, LegendSpec } from '../../specs';
 import { clearTemporaryColors, setTemporaryColor, setPersistedColor } from '../../state/actions/colors';
 import {
@@ -112,6 +113,8 @@ function LegendComponent(props: LegendStateProps & LegendDispatchProps) {
     labelOptions: legend.labelOptions,
     flatLegend: config.flatLegend ?? DEFAULT_LEGEND_CONFIG.flatLegend,
   };
+  const shouldDisplayTable = !!itemProps.legendValues.filter((v) => v !== LegendValue.CurrentAndLastValue).length;
+
   const positionStyle = legendPositionStyle(config, size, chartDimensions, containerDimensions);
   return (
     <div className={legendClasses} style={positionStyle} dir={isMostlyRTL ? 'rtl' : 'ltr'}>
@@ -130,11 +133,13 @@ function LegendComponent(props: LegendStateProps & LegendDispatchProps) {
             }))}
           />
         </div>
+      ) : shouldDisplayTable ? (
+        <LegendTable items={items} {...itemProps} listStyle={listStyle} />
       ) : (
         <div style={containerStyle} className="echLegendListContainer">
           <ul style={listStyle} className="echLegendList">
-            {items.map((item, index) => (
-              <LegendListItem key={`${index}`} item={item} {...itemProps} />
+            {items.map((item) => (
+              <LegendListItem key={`${item.childId}`} item={item} {...itemProps} />
             ))}
           </ul>
         </div>
