@@ -8,7 +8,7 @@
 
 import React from 'react';
 
-import { SharedLegendItemProps, LegendListItem } from './legend_item';
+import { SharedLegendItemProps, LegendListItem } from './legend_table_item';
 import { LegendItem } from '../../../common/legend';
 
 /** @internal */

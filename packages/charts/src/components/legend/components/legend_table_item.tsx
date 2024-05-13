@@ -180,9 +180,11 @@ export class LegendListItem extends Component<LegendItemProps> {
             </LegendTableCell>
           );
         })}
-        <LegendTableCell>
-          <LegendActionComponent Action={Action} series={seriesIdentifiers} color={color} label={label} />
-        </LegendTableCell>
+        {Action && (
+          <LegendTableCell>
+            <LegendActionComponent Action={Action} series={seriesIdentifiers} color={color} label={label} />
+          </LegendTableCell>
+        )}
       </LegendTableRow>
     );
   }

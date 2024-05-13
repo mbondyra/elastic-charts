@@ -8,9 +8,9 @@
 
 import React from 'react';
 
-import { SharedLegendItemProps } from './legend_item';
 import { LegendTableBody } from './legend_table_body';
 import { LegendTableHeader } from './legend_table_header';
+import { SharedLegendItemProps } from './legend_table_item';
 import { LegendItem } from '../../../common/legend';
 import { LegendListStyle } from '../style_utils';
 

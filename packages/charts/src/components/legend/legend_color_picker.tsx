@@ -27,7 +27,9 @@ export const LegendColorPicker = ({
   const colorRef = React.useRef<HTMLButtonElement>(null);
 
   const shouldClearPersistedColor = React.useRef(false);
-
+  const toggleIsOpen = () => {
+    setIsOpen((prevIsOpen) => !prevIsOpen);
+  };
   const handleColorClick = (changeable: boolean) =>
     changeable
       ? (event: React.MouseEvent) => {
@@ -35,10 +37,6 @@ export const LegendColorPicker = ({
           toggleIsOpen();
         }
       : undefined;
-
-  const toggleIsOpen = () => {
-    setIsOpen((prevIsOpen) => !prevIsOpen);
-  };
 
   const handleColorPickerClose = () => {
     const seriesKeys = seriesIdentifiers.map(({ key }) => key);
