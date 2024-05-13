@@ -117,7 +117,11 @@ function LegendComponent(props: LegendStateProps & LegendDispatchProps) {
 
   const positionStyle = legendPositionStyle(config, size, chartDimensions, containerDimensions);
   return (
-    <div className={legendClasses} style={positionStyle} dir={isMostlyRTL ? 'rtl' : 'ltr'}>
+    <div
+      className={legendClasses}
+      style={{ ...positionStyle, ...(shouldDisplayTable ? { width: '50%' } : {}) }}
+      dir={isMostlyRTL ? 'rtl' : 'ltr'}
+    >
       {config.customLegend ? (
         <div style={containerStyle}>
           <CustomLegend

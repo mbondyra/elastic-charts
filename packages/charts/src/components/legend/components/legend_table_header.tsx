@@ -28,11 +28,11 @@ export const LegendTableHeader = ({ hasAction, legendValues }: { legendValues: L
 
   return (
     <div role="rowgroup" className="echLegendTable__rowgroup echLegendHeader">
-      <LegendTableRow className="echLegendItem echLegendItem--vertical">
+      <LegendTableRow className="echLegendTableItem echLegendTableItem--vertical">
         <LegendTableCell className="colorWrapper"></LegendTableCell>
         <LegendTableCell>Legend</LegendTableCell>
         {legendValues.map((l) => (
-          <LegendTableCell className="echLegendItem__legendValue" key={l}>
+          <LegendTableCell className="echLegendTableItem__legendValue" key={l}>
             {legendValueTitlesMap[l]}
           </LegendTableCell>
         ))}

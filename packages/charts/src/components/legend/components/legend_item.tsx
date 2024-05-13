@@ -131,9 +131,9 @@ export class LegendListItem extends Component<LegendItemProps> {
 
     if (isItemHidden) return null;
 
-    const itemClassNames = classNames('echLegendItem', 'echLegendItem--highlightable', {
-      'echLegendItem--hidden': isSeriesHidden,
-      'echLegendItem--vertical': positionConfig.direction === LayoutDirection.Vertical,
+    const itemClassNames = classNames('echLegendTableItem', 'echLegendTableItem--highlightable', {
+      'echLegendTableItem--hidden': isSeriesHidden,
+      'echLegendTableItem--vertical': positionConfig.direction === LayoutDirection.Vertical,
     });
 
     const legendValueItems = item.values

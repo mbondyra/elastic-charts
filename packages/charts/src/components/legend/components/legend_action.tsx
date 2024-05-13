@@ -27,7 +27,7 @@ export const LegendActionComponent = ({
     return null;
   }
   return (
-    <div className="echLegendItem__action">
+    <div className="echLegendTableItem__action">
       <Action series={series} color={color} label={label} />
     </div>
   );

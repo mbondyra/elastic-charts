@@ -15,7 +15,7 @@ $echLegendColumnGap: 24px;
 $legendItemVerticalPadding: $echLegendRowGap / 2;
 $legendItemHeight: #{$euiFontSizeXS * $euiLineHeight};
 
-.echLegendItem__seriesItem {
+.echLegendTableItem__seriesItem {
   align-items: flex-start;
   display: flex;
   flex-wrap: nowrap;
@@ -31,15 +31,15 @@ $legendItemHeight: #{$euiFontSizeXS * $euiLineHeight};
   padding: $euiSizeXS ($euiSizeXS * 2);
 }
 
-.echLegendItem .echLegendTable__cell:last-child {
+.echLegendTableItem .echLegendTable__cell:last-child {
   padding-right: 0;
 }
 
-.echLegendItem:last-child .echLegendTable__cell {
+.echLegendTableItem:last-child .echLegendTable__cell {
   border-bottom: #D3DAE6 solid 1px;
 }
 
-.echLegendItem--highlightable {
+.echLegendTableItem--highlightable {
   .echLegendTable__cell:hover {
     background-color: $euiColorLightestShade;
   }
@@ -53,30 +53,21 @@ $legendItemHeight: #{$euiFontSizeXS * $euiLineHeight};
   }
 }
 
-.echLegendTable{
-  .echLegendItem {
+.echLegendTable {
+  .echLegendTableItem {
     color: $euiTextColor;
   
-    .colorWrapper {
+    .colorWrapper.echLegendTable__cell {
       padding-right: 0;
       padding-left: 0 !important;
       width: 12px;
     }
-  
-    // wrapper is needed to isolate color icon when wrapped or not
-    .colorWrapper > *:first-of-type {
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      // euiPopover adds a div with height of 19px otherwise
-      // this prevents color dot from shifting when wrapped
-      height: $legendItemHeight;
-    }
+
   
     &:not([dir='rtl']) > * {
       padding-left: $euiSizeS;
   
-      // &:last-child:not(.echLegendItem__legendValue) {
+      // &:last-child:not(.echLegendTableItem__legendValue) {
       //   padding-right: $euiSizeS;
       // }
     }
@@ -84,68 +75,18 @@ $legendItemHeight: #{$euiFontSizeXS * $euiLineHeight};
     &[dir='rtl'] > * {
       padding-right: $euiSizeXS;
   
-      // &:last-child:not(.echLegendItem__legendValue) {
+      // &:last-child:not(.echLegendTableItem__legendValue) {
       //   padding-left: $euiSizeXS;
       // }
     }
   
-    &[dir='rtl'] .echLegendItem__legendValue {
+    &[dir='rtl'] .echLegendTableItem__legendValue {
       text-align: left;
     } 
   
     &:not(&--hidden) {
-      .echLegendItem__color--changable {
+      .echLegendTableItem__color--changable {
         cursor: pointer;
-      }
-    }
-  
-    &__action {
-      cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: $legendItemHeight;
-      max-width: calc(#{$legendItemHeight} + #{$euiSizeXS * 2});
-  
-      .euiPopover,
-      .euiPopover__anchor,
-      .euiPopover__anchor > *:first-child {
-        // makes custom buttons in eui popover take full action size
-        height: 100%;
-        width: 100%;
-        display: flex;
-      }
-    }
-  
-    &__color {
-      display: flex;
-      line-height: 1.5;
-      align-items: center;
-    }
-  
-    &__label {
-      @include euiFontSizeXS;
-      flex: 1 1 auto;
-      text-align: left;
-      vertical-align: baseline;
-      letter-spacing: unset;
-      align-items: center;
-      @include wrapText;
-  
-      &--singleline {
-        @include euiTextTruncate;
-      }
-  
-      // div to prevent changing to button
-      &--multiline:is(div) {
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2; // number of lines to show, overridden in element styles
-      }
-  
-      &--clickable:hover {
-        cursor: pointer;
-        text-decoration: underline;
       }
     }
   
@@ -173,15 +114,13 @@ $legendItemHeight: #{$euiFontSizeXS * $euiLineHeight};
     }
   
     &[dir='rtl'] {
-      .echLegendItem {
+      .echLegendTableItem {
         &__label {
           text-align: right;
         }
       }
     }
   }
-  
-  
 }
 
 
@@ -200,26 +139,22 @@ $legendItemHeight: #{$euiFontSizeXS * $euiLineHeight};
 
 
 
+.echLegendTable {
+  overflow: auto;
+  display: grid;
+  width: 100%;
+  padding: 8px;
+  position: relative;
 
+  .echLegendTable__rowgroup {
+    display: contents;
+  }
+  .echLegendTable__row {
+    display: contents;
+  }
+}
 
 .echLegendTable {
-    z-index: 1;
-  
-    max-width: 50%;
-    .echLegendTable {
-      overflow: auto;
-      display: grid;
-      width: 100%;
-      padding: 8px;
-      position: relative;
-  
-      .echLegendTable__rowgroup {
-        display: contents;
-      }
-      .echLegendTable__row {
-        display: contents;
-      }
-    }
     &--horizontal {
       max-width: 100%;
       max-height: 100px;
