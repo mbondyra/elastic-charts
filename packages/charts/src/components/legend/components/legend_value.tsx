@@ -6,18 +6,15 @@
  * Side Public License, v 1.
  */
 
-import classNames from 'classnames';
 import React from 'react';
 
-interface LegendTableRowProps extends React.HTMLAttributes<HTMLDivElement> {}
+import { LegendItemValue } from '../../../common/legend';
 
-/** @public */
-export const LegendTableRow = ({ id, children, className, ...rest }: LegendTableRowProps) => {
-  const classes = classNames('echLegendTable__row', className);
-
+/** @internal */
+export const LegendValueComponent = ({ label }: LegendItemValue) => {
   return (
-    <div role="row" id={id} className={classes} {...rest}>
-      {children}
+    <div className="echLegendItem__legendValue" title={`${label}`}>
+      {label}
     </div>
   );
 };

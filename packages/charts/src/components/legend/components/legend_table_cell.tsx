@@ -9,24 +9,20 @@
 import classNames from 'classnames';
 import React, { PropsWithChildren } from 'react';
 
-import { LegendCellStyle } from './types';
-
 /** @public */
 export type LegendTableCellProps = PropsWithChildren<{
   truncate?: boolean;
   className?: string;
-  title?: string;
-  style?: LegendCellStyle;
 }>;
 
 /** @public */
-export const LegendTableCell = ({ style, truncate = false, className, children }: LegendTableCellProps) => {
+export const LegendTableCell = ({ truncate = false, className, children }: LegendTableCellProps) => {
   const classes = classNames('echLegendTable__cell', className, {
     'echLegendTable__cell--truncate': truncate,
   });
 
   return (
-    <div role="gridcell" className={classes} style={style}>
+    <div role="gridcell" className={classes}>
       {children}
     </div>
   );
