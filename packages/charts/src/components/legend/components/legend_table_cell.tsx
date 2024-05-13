@@ -21,8 +21,8 @@ export type LegendTableCellProps = PropsWithChildren<{
 
 /** @public */
 export const LegendTableCell = ({ style, truncate = false, className, children }: LegendTableCellProps) => {
-  const classes = classNames('echLegend__tableCell', className, {
-    'echLegend__tableCell--truncate': truncate,
+  const classes = classNames('echLegendTable__cell', className, {
+    'echLegendTable__cell--truncate': truncate,
   });
 
   return (

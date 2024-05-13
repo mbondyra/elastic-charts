@@ -27,9 +27,9 @@ const COLOR_DOT_CHECK_WIDTH = euiDarkVars.euiSizeM;
 export function LegendTable({ items, listStyle, ...itemProps }: LegendTableProps) {
   const gridRowLength = (itemProps.action ? 1 : 0) + (items?.[0]?.values.length ?? 0);
   return (
-    <div className="echLegend__tableContainer">
+    <div className="echLegendTable__container">
       <div
-        className="echLegend__table"
+        className="echLegendTable"
         role="table"
         style={{
           ...listStyle,

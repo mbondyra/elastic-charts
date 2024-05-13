@@ -27,7 +27,7 @@ export const LegendTableHeader = ({ hasAction, legendValues }: { legendValues: L
   }
 
   return (
-    <div role="rowgroup" className="echLegend__tableRowgroup echLegendHeader">
+    <div role="rowgroup" className="echLegendTable__rowgroup echLegendHeader">
       <LegendTableRow className="echLegendItem echLegendItem--vertical">
         <LegendTableCell className="colorWrapper"></LegendTableCell>
         <LegendTableCell>Legend</LegendTableCell>

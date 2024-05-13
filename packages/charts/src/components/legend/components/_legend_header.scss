@@ -5,7 +5,7 @@ $tableOutsideBorder: solid $legendBorderWidth $euiColorLightShade;
   font-weight: $euiFontWeightSemiBold;
   font-size: $euiFontSizeXS;
   font-weight: $euiFontWeightSemiBold;
-  .echLegend__tableCell {
+  .echLegendTable__cell {
     border-bottom: $tableOutsideBorder;
   }
 }

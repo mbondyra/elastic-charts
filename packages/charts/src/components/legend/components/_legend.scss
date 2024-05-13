@@ -18,7 +18,7 @@ $tableRowHoverSelectedColor: tintOrShade($euiFocusBackgroundColor, 0, 10%);
 
 $transitionTime: 200ms;
 
-// .echLegend {
+// .echLegendTable {
 //   @include euiToolTipStyle;
 //   @include euiFontSizeXS;
 //   padding: 0;
@@ -43,16 +43,16 @@ $transitionTime: 200ms;
 //     pointer-events: auto;
 //     user-select: auto;
 
-//     .echLegend__tableRow--selectable {
+//     .echLegendTable__row--selectable {
 //       cursor: pointer;
 //     }
 
-//     .echLegend__tableWrapper {
+//     .echLegendTable__Wrapper {
 //       pointer-events: auto;
 //     }
 //   }
 
-//   .echLegend__tableCell--truncate {
+//   .echLegendTable__cell--truncate {
 //     @include lineClamp(2);
 //   }
 
@@ -80,9 +80,9 @@ $transitionTime: 200ms;
 //     }
 //   }
 
-//   &__tableHeader,
-//   &__tableFooter {
-//     .echLegend__tableCell {
+//   &__header,
+//   &__footer {
+//     .echLegendTable__cell {
 //       cursor: default;
 //       font-weight: $euiFontWeightSemiBold;
 //       background-color: $euiColorEmptyShade;
@@ -91,30 +91,30 @@ $transitionTime: 200ms;
 //     }
 //   }
 
-//   &__tableHeader,
-//   &__tableBody,
-//   &__tableFooter,
-//   &__tableRow {
+//   &__header,
+//   &__body,
+//   &__footer,
+//   &__row {
 //     // This ignores all above elements for positioning
 //     // effectively spreading all children in its place
 //     display: contents;
 //   }
 
-//   &__tableHeader {
+//   &__thader {
 //     margin-bottom: 0;
 //     top: 0;
 
-//     .echLegend__tableCell {
+//     .echLegendTable__cell {
 //       border-bottom: $tableBorder;
 //       top: 0;
 //     }
 //   }
 
-//   &__tableFooter {
+//   &__footer {
 //     margin-top: 0;
 //     bottom: 0;
 
-//     .echLegend__tableCell {
+//     .echLegendTable__cell {
 //       border-top: $tableBorder;
 //       bottom: 0;
 //     }
@@ -124,45 +124,45 @@ $transitionTime: 200ms;
 //     padding: 4px;
 //   }
 
-//   &__tableBody {
-//     .echLegend__tableCell:not(.echLegend__colorCell) {
+//   &__body {
+//     .echLegendTable__cell:not(.echLegend__colorCell) {
 //       padding: 2px 4px;
 //       transition:
 //         margin $transitionTime,
 //         padding $transitionTime;
 //     }
 
-//     .echLegend__tableRow--selected {
-//       .echLegend__tableCell:not(.echLegend__colorCell),
+//     .echLegendTable__row--selected {
+//       .echLegendTable__cell:not(.echLegend__colorCell),
 //       .echLegend__colorCell .echLegend__colorStrip--spacer {
 //         background-color: $tableRowSelectedColor;
 //       }
 
-//       .echLegend__colorCell + .echLegend__tableCell {
+//       .echLegend__colorCell + .echLegendTable__cell {
 //         margin-left: $colorStripPadding * 2;
 //         padding-left: 10px;
 //       }
 //     }
 
-//     .echLegend__tableRow--selected:hover {
-//       .echLegend__tableCell:not(.echLegend__colorCell),
+//     .echLegendTable__row--selected:hover {
+//       .echLegendTable__cell:not(.echLegend__colorCell),
 //       .echLegend__colorCell .echLegend__colorStrip--spacer {
 //         background-color: $tableRowHoverSelectedColor;
 //       }
 //     }
-//     .echLegend__tableRow--selectable:hover {
-//       .echLegend__tableCell:not(.echLegend__colorCell),
+//     .echLegendTable__row--selectable:hover {
+//       .echLegendTable__cell:not(.echLegend__colorCell),
 //       .echLegend__colorCell .echLegend__colorStrip--spacer {
 //         background-color: $tableRowHoverColor;
 //       }
 //     }
 //   }
 
-//   &__tableRow {
+//   &__row {
 //     position: relative;
 
 //     &--highlighted {
-//       .echLegend__tableCell:not(.echLegend__colorCell),
+//       .echLegendTable__cell:not(.echLegend__colorCell),
 //       .echLegend__colorCell .echLegend__colorStrip--spacer {
 //         background-color: transparentize($euiColorLightShade, 0.5);
 //       }

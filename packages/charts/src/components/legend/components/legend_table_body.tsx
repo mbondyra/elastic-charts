@@ -14,7 +14,7 @@ import { SharedLegendItemProps, LegendListItem } from '../legend_item';
 /** @internal */
 export const LegendTableBody: React.FC<SharedLegendItemProps & { items: LegendItem[] }> = ({ items, ...itemProps }) => {
   return (
-    <div role="rowgroup" className="echLegend__tableRowgroup">
+    <div role="rowgroup" className="echLegendTable__rowgroup">
       {items.map((item) => (
         <LegendListItem key={`${item.childId}`} item={item} {...itemProps} />
       ))}

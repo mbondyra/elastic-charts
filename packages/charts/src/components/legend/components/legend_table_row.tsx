@@ -13,7 +13,7 @@ interface LegendTableRowProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 /** @public */
 export const LegendTableRow = ({ id, children, className, ...rest }: LegendTableRowProps) => {
-  const classes = classNames('echLegend__tableRow', className);
+  const classes = classNames('echLegendTable__row', className);
 
   return (
     // cannot focus row using display: contents to structure grid
