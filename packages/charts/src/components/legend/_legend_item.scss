@@ -3,89 +3,54 @@
 $legendItemVerticalPadding: $echLegendRowGap / 2;
 $legendItemHeight: #{$euiFontSizeXS * $euiLineHeight};
 
-.echLegendItem__seriesItem {
-  align-items: flex-start;
+.echLegendItem {
+  color: $euiTextColor;
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-between;
-  gap: 4px;
-}
-
-.echLegendTable__cell {
-  @include euiFontSizeXS;
-  align-content: center;
-  border-bottom: $euiColorLightestShade solid 1px;
-  padding-bottom: 4px;
-  padding: $euiSizeXS ($euiSizeXS * 2);
-}
-
-.echLegendItem .echLegendTable__cell:last-child {
-  padding-right: 0;
-}
-
-.echLegendItem:last-child .echLegendTable__cell {
-  border-bottom: #D3DAE6 solid 1px;
-}
-
-.echLegendItem--highlightable {
-  .echLegendTable__cell:hover {
-    background-color: $euiColorLightestShade;
-  }
-  
-  .echLegendTable__cell:hover ~ .echLegendTable__cell {
-    background-color: $euiColorLightestShade;
-  }
-  
-  .echLegendTable__cell:has(~ .echLegendTable__cell:hover) {
-    background-color: $euiColorLightestShade;
-  }
-}
-
-
-
-.echLegendItem {
-  color: $euiTextColor;
-
-  .colorWrapper {
-    padding-right: 0;
-    padding-left: 0 !important;
-    width: 12px;
-  }
+  align-items: flex-start;
+  position: relative;
 
   // wrapper is needed to isolate color icon when wrapped or not
   .colorWrapper > *:first-of-type {
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     // euiPopover adds a div with height of 19px otherwise
     // this prevents color dot from shifting when wrapped
     height: $legendItemHeight;
   }
 
-  &:not([dir='rtl']) > * {
-    padding-left: $euiSizeS;
+  &:not([dir='rtl']) > *:not(.background) {
+    margin-left: $euiSizeXS;
 
-    // &:last-child:not(.echLegendItem__legendValue) {
-    //   padding-right: $euiSizeS;
-    // }
+    &:last-child:not(.echLegendItem__extra) {
+      margin-right: $euiSizeXS;
+    }
   }
 
-  &[dir='rtl'] > * {
-    padding-right: $euiSizeXS;
+  &[dir='rtl'] > *:not(.background) {
+    margin-right: $euiSizeXS;
 
-    // &:last-child:not(.echLegendItem__legendValue) {
-    //   padding-left: $euiSizeXS;
-    // }
+    &:last-child:not(.echLegendItem__extra) {
+      margin-left: $euiSizeXS;
+    }
   }
-
-  &[dir='rtl'] .echLegendItem__legendValue {
-    text-align: left;
-  } 
 
   &:not(&--hidden) {
     .echLegendItem__color--changable {
       cursor: pointer;
     }
+  }
+
+  &:hover .background {
+    background-color: $euiColorLightestShade;
+  }
+
+  .background {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
   }
 
   &__action {
@@ -138,14 +103,14 @@ $legendItemHeight: #{$euiFontSizeXS * $euiLineHeight};
     }
   }
 
-  &__legendValue {
+  &__extra {
     @include euiFontSizeXS;
     text-align: right;
     flex: 0 0 auto;
+    margin-left: $euiSizeXS;
     font-feature-settings: 'tnum';
     letter-spacing: unset;
     direction: ltr;
-    white-space: nowrap;
   }
 
   &--vertical {
@@ -154,6 +119,11 @@ $legendItemHeight: #{$euiFontSizeXS * $euiLineHeight};
 
     &:first-of-type {
       margin-top: $legendItemVerticalPadding / 2;
+    }
+
+    .background {
+      margin-top: $legendItemVerticalPadding / 2;
+      margin-bottom: $legendItemVerticalPadding / 2;
     }
   }
 

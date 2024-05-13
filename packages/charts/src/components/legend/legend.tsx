@@ -11,9 +11,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch, bindActionCreators } from 'redux';
 
-import { LegendTable } from './components/legend_table';
 import { CustomLegend } from './custom_legend';
-import { LegendItemProps } from './legend_item';
+import { LegendItemProps, LegendListItem } from './legend_item';
 import { getLegendPositionConfig, legendPositionStyle } from './position_style';
 import { getLegendStyle, getLegendListStyle } from './style_utils';
 import { LegendItem, LegendItemExtraValues } from '../../common/legend';
@@ -114,7 +113,6 @@ function LegendComponent(props: LegendStateProps & LegendDispatchProps) {
     flatLegend: config.flatLegend ?? DEFAULT_LEGEND_CONFIG.flatLegend,
   };
   const positionStyle = legendPositionStyle(config, size, chartDimensions, containerDimensions);
-
   return (
     <div className={legendClasses} style={positionStyle} dir={isMostlyRTL ? 'rtl' : 'ltr'}>
       {config.customLegend ? (
@@ -133,7 +131,13 @@ function LegendComponent(props: LegendStateProps & LegendDispatchProps) {
           />
         </div>
       ) : (
-        <LegendTable items={items} {...itemProps} listStyle={listStyle} />
+        <div style={containerStyle} className="echLegendListContainer">
+          <ul style={listStyle} className="echLegendList">
+            {items.map((item, index) => (
+              <LegendListItem key={`${index}`} item={item} {...itemProps} />
+            ))}
+          </ul>
+        </div>
       )}
     </div>
   );
