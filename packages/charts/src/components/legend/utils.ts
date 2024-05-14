@@ -6,7 +6,7 @@
  * Side Public License, v 1.
  */
 
-import { LegendItemExtraValues, LegendItem, LegendItemValue } from '../../common/legend';
+import { LegendItemExtraValues, LegendItem, LegendItemValue, LegendValue } from '../../common/legend';
 
 /** @internal */
 export function getExtra(
@@ -17,7 +17,9 @@ export function getExtra(
   const { seriesIdentifiers, values, childId, path } = item;
   // don't show extra if the legend item is associated with multiple series
   if (extraValues.size === 0 || seriesIdentifiers.length > 1 || !seriesIdentifiers[0]) {
-    return values.length > 0 ? { label: `${values[0]?.label ?? ''}`, value: values[0]?.value ?? null } : undefined;
+    return values.length > 0
+      ? { label: `${values[0]?.label ?? ''}`, value: values[0]?.value ?? null, type: LegendValue.CurrentAndLastValue }
+      : undefined;
   }
   const [{ key }] = seriesIdentifiers;
   const extraValueKey = path.map(({ index }) => index).join('__');
@@ -26,6 +28,6 @@ export function getExtra(
   return actionExtra
     ? actionExtra
     : extraValues.size === totalItems && values.length > 0
-      ? { label: `${values[0]?.label ?? ''}`, value: values[0]?.value ?? null }
+      ? { label: `${values[0]?.label ?? ''}`, value: values[0]?.value ?? null, type: LegendValue.CurrentAndLastValue }
       : undefined;
 }

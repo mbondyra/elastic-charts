@@ -7,7 +7,7 @@
  */
 
 import { Color } from '../../../common/colors';
-import { LegendItem, LegendValue } from '../../../common/legend';
+import { LegendItem } from '../../../common/legend';
 import { SeriesKey, SeriesIdentifier } from '../../../common/series_id';
 import { SettingsSpec } from '../../../specs';
 import { isDefined, mergePartial } from '../../../utils/common';

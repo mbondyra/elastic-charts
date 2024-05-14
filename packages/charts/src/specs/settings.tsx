@@ -471,7 +471,7 @@ export interface LegendSpec {
   /**
    * a title for the table legend
    */
-  headerTitle?: string;
+  legendTitle?: string;
 }
 
 /**

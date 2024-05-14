@@ -73,7 +73,6 @@ export function getLegendValues(
 
     return {
       type,
-      title: legendValueTitlesMap[type],
       label: typeof value === 'number' ? formatter(value) : '',
       value,
     };
