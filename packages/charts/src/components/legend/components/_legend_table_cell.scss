@@ -14,7 +14,6 @@
 
 .echLegendTable__colorCell {
   padding-right: 0;
-  padding-left: 2px !important;
-  width: 16px;
+  padding-left: $euiSizeXS / 2 !important;
+  width: $colorDotCheckWidth;
 }
-

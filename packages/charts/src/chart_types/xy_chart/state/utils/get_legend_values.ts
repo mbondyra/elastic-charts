@@ -70,12 +70,12 @@ export function getLegendValues(
 ) {
   return types
     .map((type) => {
-      const value = getLegendValue(series, xDomain, type, valueAccessor) ?? '-';
+      const value = getLegendValue(series, xDomain, type, valueAccessor) ?? null;
 
       return {
         type,
         title: legendValueTitlesMap[type],
-        label: typeof value === 'number' ? formatter(value) : '-',
+        label: typeof value === 'number' ? formatter(value) : null,
         value,
       };
     })

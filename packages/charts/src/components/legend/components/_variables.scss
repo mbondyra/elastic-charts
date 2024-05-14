@@ -1,23 +1,17 @@
+$tableRowHoverColor: $euiColorLightestShade;
+$legendBorderColor: $euiColorLightestShade;
+
+$echLegendRowGap: 8px;
+$echLegendColumnGap: 8px;
+
+$legendItemVerticalPadding: $echLegendRowGap / 2;
+// $legendItemHeight: #{$euiFontSizeXS * $euiLineHeight};
+
+$legendBorderWidth: 1px;
+$tableBorder: solid $legendBorderWidth $legendBorderColor;
+$tableOutsideBorder: solid $legendBorderWidth $euiColorLightShade;
 
 // /**
 //  * Manually synced with `COLOR_DOT_CHECK_WIDTH` const in [`legend_table.tsx`](packages/charts/src/components/legend/components/legend_table.tsx)
 //  */
 $colorDotCheckWidth: 12px;
-$colorDotPadding: 5px;
-$maxRowColorDotWidth: $colorDotCheckWidth + $colorDotPadding * 2;
-
-
-$tableRowHoverColor: transparentize($euiColorPrimary, 0.95);
-$tableRowSelectedColor: tintOrShade($euiFocusBackgroundColor, 0, 10%);
-$tableRowHoverSelectedColor: tintOrShade($euiFocusBackgroundColor, 0, 10%);
-
-$echLegendRowGap: 8px;
-$echLegendColumnGap: 24px;
-
-$legendItemVerticalPadding: $echLegendRowGap / 2;
-$legendItemHeight: #{$euiFontSizeXS * $euiLineHeight};
-
-$legendBorderColor: $euiColorLightestShade;
-$legendBorderWidth: 1px;
-$tableBorder: solid $legendBorderWidth $legendBorderColor;
-$tableOutsideBorder: solid $legendBorderWidth $euiColorLightShade;
