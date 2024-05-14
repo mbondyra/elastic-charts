@@ -43,7 +43,7 @@ export const legendValueTitlesMap = {
   [LegendValue.FirstValue]: 'First',
   [LegendValue.FirstNonNullValue]: 'First non-null',
   [LegendValue.Average]: 'Avg',
-  [LegendValue.Median]: 'Median',
+  [LegendValue.Median]: 'Mid',
   [LegendValue.Min]: 'Min',
   [LegendValue.Max]: 'Max',
   [LegendValue.Total]: 'Total',

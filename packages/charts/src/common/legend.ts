@@ -20,7 +20,7 @@ import { PointStyle } from '../utils/themes/theme';
 export type LegendItemChildId = CategoryKey;
 
 /** @public */
-export type LegendItemValue = { value: PrimitiveValue; label: string; type: LegendValue };
+export type LegendItemValue = { value: PrimitiveValue; label: string; type?: LegendValue };
 
 /** @public */
 export const LegendValue = Object.freeze({

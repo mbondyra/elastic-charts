@@ -40,7 +40,7 @@ export const LegendTableHeader = ({
         <LegendTableCell className="echLegend__colorWrapper echLegendTable__colorCell"></LegendTableCell>
         <LegendTableCell>{legendTitle}</LegendTableCell>
         {legendValues.map((l) => (
-          <LegendTableCell className="echLegendSingleItem__legendValue" key={l}>
+          <LegendTableCell className="echLegend__legendValue" key={l}>
             {legendValueTitlesMap[l]}
           </LegendTableCell>
         ))}

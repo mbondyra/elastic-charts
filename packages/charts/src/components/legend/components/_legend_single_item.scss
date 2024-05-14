@@ -26,7 +26,7 @@
   &:not([dir='rtl']) > * {
     padding-left: $euiSizeS;
 
-    // &:last-child:not(.echLegendSingleItem__legendValue) {
+    // &:last-child:not(.echLegend__legendValue) {
     //   padding-right: $euiSizeXS;
     // }
   }
@@ -34,12 +34,12 @@
   &[dir='rtl'] > * {
     padding-right: $euiSizeXS;
 
-    // &:last-child:not(.echLegendSingleItem__legendValue) {
+    // &:last-child:not(.echLegend__legendValue) {
     //   padding-left: $euiSizeXS;
     // }
   }
 
-  &[dir='rtl'] .echLegendSingleItem__legendValue {
+  &[dir='rtl'] .echLegend__legendValue {
     text-align: left;
   } 
 
@@ -51,16 +51,6 @@
 
   .echLegendTable__cell:last-child {
     padding-right: $euiSizeXS/2;
-  }
-
-  &__legendValue {
-    @include euiFontSizeXS;
-    text-align: right;
-    flex: 0 0 auto;
-    font-feature-settings: 'tnum';
-    letter-spacing: unset;
-    direction: ltr;
-    white-space: nowrap;
   }
 
   &--vertical {
@@ -79,4 +69,15 @@
   .echLegendItem__action {
     height: inherit;
   }
+
+  .echLegend__legendValue {
+    @include euiFontSizeXS;
+    text-align: right;
+    flex: 0 0 auto;
+    font-feature-settings: 'tnum';
+    letter-spacing: unset;
+    direction: ltr;
+    white-space: nowrap;
+  }
+
 }

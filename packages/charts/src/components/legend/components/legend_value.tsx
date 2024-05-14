@@ -13,7 +13,7 @@ import { LegendItemValue } from '../../../common/legend';
 /** @internal */
 export const LegendValueComponent = ({ label }: LegendItemValue) => {
   return (
-    <div className="echLegendSingleItem__legendValue" title={`${label}`}>
+    <div className="echLegend__legendValue" title={`${label}`}>
       {label}
     </div>
   );
