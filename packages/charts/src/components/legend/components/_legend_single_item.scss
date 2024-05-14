@@ -2,7 +2,7 @@
 @import '../../mixins';
 
 .echLegendSingleItem .echLegendTable__cell:last-child {
-  padding-right: 0;
+  padding-right: $euiSizeXS/2;
 }
 
 .echLegendSingleItem:last-child .echLegendTable__cell {
@@ -29,17 +29,17 @@
   &:not([dir='rtl']) > * {
     padding-left: $euiSizeS;
 
-    &:last-child:not(.echLegendSingleItem__legendValue) {
-      padding-right: $euiSizeS;
-    }
+    // &:last-child:not(.echLegendSingleItem__legendValue) {
+    //   padding-right: $euiSizeXS;
+    // }
   }
 
   &[dir='rtl'] > * {
     padding-right: $euiSizeXS;
 
-    &:last-child:not(.echLegendSingleItem__legendValue) {
-      padding-left: $euiSizeXS;
-    }
+    // &:last-child:not(.echLegendSingleItem__legendValue) {
+    //   padding-left: $euiSizeXS;
+    // }
   }
 
   &[dir='rtl'] .echLegendSingleItem__legendValue {
