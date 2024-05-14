@@ -8,8 +8,8 @@
 
 import React from 'react';
 
-import { SeriesIdentifier } from '../../../common/series_id';
-import { LegendAction } from '../../../specs/settings';
+import { SeriesIdentifier } from '../../common/series_id';
+import { LegendAction } from '../../specs/settings';
 
 /** @internal */
 export const LegendActionComponent = ({
@@ -18,16 +18,13 @@ export const LegendActionComponent = ({
   color,
   label,
 }: {
-  Action?: LegendAction;
+  Action: LegendAction;
   series: SeriesIdentifier[];
   color: string;
   label: string;
 }) => {
-  if (!Action) {
-    return null;
-  }
   return (
-    <div className="echLegendTableItem__action">
+    <div className="echLegendItem__action">
       <Action series={series} color={color} label={label} />
     </div>
   );

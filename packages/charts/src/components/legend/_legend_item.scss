@@ -12,7 +12,7 @@ $legendItemHeight: #{$euiFontSizeXS * $euiLineHeight};
   position: relative;
 
   // wrapper is needed to isolate color icon when wrapped or not
-  .colorWrapper > *:first-of-type {
+  .echLegend__colorWrapper > *:first-of-type {
     // euiPopover adds a div with height of 19px otherwise
     // this prevents color dot from shifting when wrapped
     height: $legendItemHeight;

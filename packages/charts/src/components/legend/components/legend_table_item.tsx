@@ -9,7 +9,6 @@
 import classNames from 'classnames';
 import React, { Component, CSSProperties } from 'react';
 
-import { LegendActionComponent } from './legend_action';
 import { LegendTableCell } from './legend_table_cell';
 import { LegendTableRow } from './legend_table_row';
 import { LegendValueComponent } from './legend_value';
@@ -37,6 +36,7 @@ import { LayoutDirection } from '../../../utils/common';
 import { deepEqual } from '../../../utils/fast_deep_equal';
 import { LegendLabelOptions } from '../../../utils/themes/theme';
 import { Label as ItemLabel } from '../label';
+import { LegendActionComponent } from '../legend_action';
 import { LegendColorPicker as LegendColorPickerComponent } from '../legend_color_picker';
 import { getExtra } from '../utils';
 
@@ -131,9 +131,9 @@ export class LegendListItem extends Component<LegendItemProps> {
 
     if (isItemHidden) return null;
 
-    const itemClassNames = classNames('echLegendTableItem', 'echLegendTableItem--highlightable', {
-      'echLegendTableItem--hidden': isSeriesHidden,
-      'echLegendTableItem--vertical': positionConfig.direction === LayoutDirection.Vertical,
+    const itemClassNames = classNames('echLegendSingleItem', 'echLegendSingleItem--highlightable', {
+      'echLegendSingleItem--hidden': isSeriesHidden,
+      'echLegendSingleItem--vertical': positionConfig.direction === LayoutDirection.Vertical,
     });
 
     const legendValueItems = item.values
@@ -160,7 +160,7 @@ export class LegendListItem extends Component<LegendItemProps> {
         dir={isMostlyRTL ? 'rtl' : 'ltr'}
         data-ech-series-name={label}
       >
-        <LegendTableCell className="colorWrapper">
+        <LegendTableCell className="echLegend__colorWrapper echLegendTable__colorCell">
           <LegendColorPickerComponent {...this.props} />
         </LegendTableCell>
         <LegendTableCell>

@@ -11,6 +11,7 @@ import React, { Component, createRef, MouseEventHandler, CSSProperties } from 'r
 
 import { Color as ItemColor } from './color';
 import { Label as ItemLabel } from './label';
+import { LegendActionComponent } from './legend_action';
 import { getExtra } from './utils';
 import { Color } from '../../common/colors';
 import { LegendItem, LegendItemExtraValues, LegendValue } from '../../common/legend';
@@ -214,7 +215,7 @@ export class LegendListItem extends Component<LegendItemProps, LegendItemState> 
           data-ech-series-name={label}
         >
           <div className="background" />
-          <div className="colorWrapper">
+          <div className="echLegend__colorWrapper">
             <ItemColor
               ref={this.colorRef}
               color={color}
@@ -237,11 +238,7 @@ export class LegendListItem extends Component<LegendItemProps, LegendItemState> 
               {legendValue.label}
             </div>
           )}
-          {Action && (
-            <div className="echLegendItem__action">
-              <Action series={seriesIdentifiers} color={color} label={label} />
-            </div>
-          )}
+          {Action && <LegendActionComponent Action={Action} series={seriesIdentifiers} color={color} label={label} />}
         </li>
         {this.renderColorPicker()}
       </>

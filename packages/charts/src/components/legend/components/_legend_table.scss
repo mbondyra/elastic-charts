@@ -1,0 +1,71 @@
+@import "variables";
+@import '../../mixins';
+
+
+.echLegendTable__container {
+  @include euiYScrollWithShadows;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  :focus {
+    @include euiFocusRing(null, 1);
+    background-color: $euiFocusBackgroundColor;
+    border-radius: $euiBorderRadius / 2;
+  }
+}
+
+.echLegend {
+  z-index: 1;
+  max-width: 50%;
+  .echLegendTable {
+    overflow: auto;
+    display: grid;
+    width: 100%;
+    padding: 8px;
+    position: relative;
+
+    &__header,
+    &__rowgroup,
+    &__row {
+      // This ignores all above elements for positioning
+      // effectively spreading all children in its place
+      display: contents;
+    }
+
+  }
+  &--horizontal {
+    max-width: 100%;
+    max-height: 100px;
+    .echLegendTable {
+      padding-bottom: 4px;
+      margin-top: $echLegendRowGap;
+      margin-bottom: $echLegendRowGap;
+    }
+  }
+
+  &--top,
+  &--left {
+    order: 0;
+  }
+
+  &--bottom,
+  &--right {
+    order: 1;
+  }
+
+  &--debug {
+    background: rgba(238, 130, 238, 0.2);
+    position: relative;
+  }
+
+  &--inert {
+    pointer-events: none;
+  }
+}
+
+.echLegend__colorWrapper > *:first-of-type {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
