@@ -68,18 +68,16 @@ export function getLegendValues(
   valueAccessor: (d: DataSeriesDatum) => number | null,
   formatter: TickFormatter<any> | ((tick: unknown) => string),
 ) {
-  return types
-    .map((type) => {
-      const value = getLegendValue(series, xDomain, type, valueAccessor) ?? null;
+  return types.map((type) => {
+    const value = getLegendValue(series, xDomain, type, valueAccessor) ?? null;
 
-      return {
-        type,
-        title: legendValueTitlesMap[type],
-        label: typeof value === 'number' ? formatter(value) : null,
-        value,
-      };
-    })
-    .filter(nonNullable);
+    return {
+      type,
+      title: legendValueTitlesMap[type],
+      label: typeof value === 'number' ? formatter(value) : '',
+      value,
+    };
+  });
 }
 
 /**

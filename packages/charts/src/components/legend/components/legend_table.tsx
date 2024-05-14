@@ -12,21 +12,16 @@ import { LegendTableBody } from './legend_table_body';
 import { LegendTableHeader } from './legend_table_header';
 import { SharedLegendItemProps } from './legend_table_item';
 import { LegendItem } from '../../../common/legend';
-import { LegendListStyle } from '../style_utils';
 
 /** @internal */
 export interface LegendTableProps extends SharedLegendItemProps {
   items: LegendItem[];
-  listStyle: LegendListStyle;
 }
 
-/**
- * Manually synced with `colorDotCheckWidth` const in [`_legend.scss`](packages/charts/src/components/legend/components/_legend.scss)
- */
-const COLOR_DOT_CHECK_WIDTH = '12px';
+const COLOR_DOT_CHECK_WIDTH = '10px';
 
 /** @internal */
-export function LegendTable({ items, listStyle, ...itemProps }: LegendTableProps) {
+export function LegendTable({ items, ...itemProps }: LegendTableProps) {
   const gridRowLength = (itemProps.action ? 1 : 0) + (items?.[0]?.values.length ?? 0);
   return (
     <div className="echLegendTable__container">
@@ -34,7 +29,6 @@ export function LegendTable({ items, listStyle, ...itemProps }: LegendTableProps
         className="echLegendTable"
         role="table"
         style={{
-          ...listStyle,
           gridTemplateColumns: `${COLOR_DOT_CHECK_WIDTH} minmax(50%, auto) repeat(${gridRowLength}, auto)`,
         }}
       >

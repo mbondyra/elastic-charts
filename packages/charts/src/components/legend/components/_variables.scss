@@ -11,7 +11,3 @@ $legendBorderWidth: 1px;
 $tableBorder: solid $legendBorderWidth $legendBorderColor;
 $tableOutsideBorder: solid $legendBorderWidth $euiColorLightShade;
 
-// /**
-//  * Manually synced with `COLOR_DOT_CHECK_WIDTH` const in [`legend_table.tsx`](packages/charts/src/components/legend/components/legend_table.tsx)
-//  */
-$colorDotCheckWidth: 12px;
