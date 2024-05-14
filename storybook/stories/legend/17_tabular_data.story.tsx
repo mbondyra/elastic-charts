@@ -54,6 +54,7 @@ export const Example: ChartsStory = (_, { title, description }) => {
   return (
     <Chart title={title} description={description}>
       <Settings
+        legendTitle="System Load"
         showLegend
         theme={{ legend: { labelOptions } }}
         baseTheme={useBaseTheme()}

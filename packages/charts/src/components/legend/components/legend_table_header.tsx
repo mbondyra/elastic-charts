@@ -23,11 +23,11 @@ export interface LegendHeaderProps {
 export const LegendTableHeader = ({
   hasAction,
   legendValues,
-  headerTitle = 'Legend',
+  legendTitle = 'Legend',
 }: {
   legendValues: LegendValue[];
   hasAction: boolean;
-  headerTitle?: string;
+  legendTitle?: string;
 }) => {
   const filteredLegendValues = legendValues.filter((v) => v !== LegendValue.CurrentAndLastValue);
   if (filteredLegendValues.length === 0) {
@@ -38,7 +38,7 @@ export const LegendTableHeader = ({
     <div role="rowgroup" className="echLegendTable__rowgroup echLegendTable__header">
       <LegendTableRow className="echLegendSingleItem echLegendSingleItem--vertical">
         <LegendTableCell className="echLegend__colorWrapper echLegendTable__colorCell"></LegendTableCell>
-        <LegendTableCell>{headerTitle}</LegendTableCell>
+        <LegendTableCell>{legendTitle}</LegendTableCell>
         {legendValues.map((l) => (
           <LegendTableCell className="echLegendSingleItem__legendValue" key={l}>
             {legendValueTitlesMap[l]}

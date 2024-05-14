@@ -46,5 +46,5 @@ export interface SharedLegendItemProps {
   setTemporaryColorAction: typeof setTemporaryColorAction;
   setPersistedColorAction: typeof setPersistedColorAction;
   toggleDeselectSeriesAction: typeof onToggleDeselectSeriesAction;
-  headerTitle: string;
+  legendTitle?: string;
 }

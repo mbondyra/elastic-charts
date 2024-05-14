@@ -112,6 +112,7 @@ function LegendComponent(props: LegendStateProps & LegendDispatchProps) {
     action: config.legendAction,
     labelOptions: legend.labelOptions,
     flatLegend: config.flatLegend ?? DEFAULT_LEGEND_CONFIG.flatLegend,
+    legendTitle: config.legendTitle,
   };
   const shouldDisplayTable = !!itemProps.legendValues.filter((v) => v !== LegendValue.CurrentAndLastValue).length;
 
@@ -134,7 +135,9 @@ function LegendComponent(props: LegendStateProps & LegendDispatchProps) {
           />
         </div>
       ) : shouldDisplayTable ? (
-        <LegendTable items={items} {...itemProps} />
+        <div style={containerStyle}>
+          <LegendTable items={items} {...itemProps} />
+        </div>
       ) : (
         <div style={containerStyle} className="echLegendListContainer">
           <ul style={listStyle} className="echLegendList">

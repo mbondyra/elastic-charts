@@ -35,7 +35,7 @@ export function LegendTable({ items, ...itemProps }: LegendTableProps) {
         <LegendTableHeader
           hasAction={!!itemProps.action}
           legendValues={itemProps.legendValues}
-          headerTitle={itemProps.headerTitle}
+          legendTitle={itemProps.legendTitle}
         />
         <LegendTableBody items={items} {...itemProps} />
       </div>

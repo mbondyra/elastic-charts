@@ -1,4 +1,4 @@
-@import "variables";
+@import "../variables";
 @import '../../mixins';
 
 
@@ -74,5 +74,9 @@
 
   &--hidden {
     color: $euiColorDarkShade;
+  }
+
+  .echLegendItem__action {
+    height: inherit;
   }
 }

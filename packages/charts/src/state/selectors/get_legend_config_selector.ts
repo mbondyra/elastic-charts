@@ -29,6 +29,7 @@ export const getLegendConfigSelector = createCustomCachedSelector(
     onLegendItemOver,
     onLegendItemPlusClick,
     legendValues,
+    headerTitle,
   }) => {
     return {
       flatLegend,
@@ -46,6 +47,7 @@ export const getLegendConfigSelector = createCustomCachedSelector(
       onLegendItemOver,
       onLegendItemPlusClick,
       legendValues,
+      headerTitle,
     };
   },
 );
