@@ -13,57 +13,18 @@ import { LegendTableCell } from './legend_table_cell';
 import { LegendTableRow } from './legend_table_row';
 import { LegendValueComponent } from './legend_value';
 import { nonNullable } from '../../../chart_types/xy_chart/state/utils/get_legend_values';
-import { LegendItem, LegendItemExtraValues, LegendValue } from '../../../common/legend';
+import { LegendItem, LegendValue } from '../../../common/legend';
 import { SeriesIdentifier } from '../../../common/series_id';
-import {
-  LegendItemListener,
-  BasicListener,
-  LegendAction,
-  LegendPositionConfig,
-  LegendColorPicker,
-} from '../../../specs/settings';
-import {
-  clearTemporaryColors as clearTemporaryColorsAction,
-  setTemporaryColor as setTemporaryColorAction,
-  setPersistedColor as setPersistedColorAction,
-} from '../../../state/actions/colors';
-import {
-  onLegendItemOutAction,
-  onLegendItemOverAction,
-  onToggleDeselectSeriesAction,
-} from '../../../state/actions/legend';
 import { LayoutDirection } from '../../../utils/common';
 import { deepEqual } from '../../../utils/fast_deep_equal';
-import { LegendLabelOptions } from '../../../utils/themes/theme';
 import { Label as ItemLabel } from '../label';
 import { LegendActionComponent } from '../legend_action';
 import { LegendColorPicker as LegendColorPickerComponent } from '../legend_color_picker';
+import { SharedLegendItemProps } from '../types';
 import { getExtra } from '../utils';
 
 /** @internal */
 export const LEGEND_HIERARCHY_MARGIN = 10;
-
-/** @internal */
-export interface SharedLegendItemProps {
-  flatLegend: boolean;
-  totalItems: number;
-  positionConfig: LegendPositionConfig;
-  extraValues: Map<string, LegendItemExtraValues>;
-  legendValues: Array<LegendValue>;
-  isMostlyRTL: boolean;
-  labelOptions: LegendLabelOptions;
-  colorPicker?: LegendColorPicker;
-  action?: LegendAction;
-  onClick?: LegendItemListener;
-  onMouseOut?: BasicListener;
-  onMouseOver?: LegendItemListener;
-  mouseOutAction: typeof onLegendItemOutAction;
-  mouseOverAction: typeof onLegendItemOverAction;
-  clearTemporaryColorsAction: typeof clearTemporaryColorsAction;
-  setTemporaryColorAction: typeof setTemporaryColorAction;
-  setPersistedColorAction: typeof setPersistedColorAction;
-  toggleDeselectSeriesAction: typeof onToggleDeselectSeriesAction;
-}
 
 /** @internal */
 export interface LegendItemProps extends SharedLegendItemProps {

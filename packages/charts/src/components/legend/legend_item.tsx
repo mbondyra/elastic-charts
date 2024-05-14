@@ -12,55 +12,20 @@ import React, { Component, createRef, MouseEventHandler, CSSProperties } from 'r
 import { Color as ItemColor } from './color';
 import { Label as ItemLabel } from './label';
 import { LegendActionComponent } from './legend_action';
+import { SharedLegendItemProps } from './types';
 import { getExtra } from './utils';
 import { Color } from '../../common/colors';
-import { LegendItem, LegendItemExtraValues, LegendValue } from '../../common/legend';
+import { LegendItem, LegendValue } from '../../common/legend';
 import { SeriesIdentifier } from '../../common/series_id';
-import {
-  LegendItemListener,
-  BasicListener,
-  LegendColorPicker,
-  LegendAction,
-  LegendPositionConfig,
-} from '../../specs/settings';
-import {
-  clearTemporaryColors as clearTemporaryColorsAction,
-  setTemporaryColor as setTemporaryColorAction,
-  setPersistedColor as setPersistedColorAction,
-} from '../../state/actions/colors';
-import {
-  onLegendItemOutAction,
-  onLegendItemOverAction,
-  onToggleDeselectSeriesAction,
-} from '../../state/actions/legend';
 import { LayoutDirection } from '../../utils/common';
 import { deepEqual } from '../../utils/fast_deep_equal';
-import { LegendLabelOptions } from '../../utils/themes/theme';
 
 /** @internal */
 export const LEGEND_HIERARCHY_MARGIN = 10;
 
 /** @internal */
-export interface LegendItemProps {
+export interface LegendItemProps extends SharedLegendItemProps {
   item: LegendItem;
-  flatLegend: boolean;
-  totalItems: number;
-  positionConfig: LegendPositionConfig;
-  extraValues: Map<string, LegendItemExtraValues>;
-  legendValues: Array<LegendValue>;
-  isMostlyRTL: boolean;
-  labelOptions: LegendLabelOptions;
-  colorPicker?: LegendColorPicker;
-  action?: LegendAction;
-  onClick?: LegendItemListener;
-  onMouseOut?: BasicListener;
-  onMouseOver?: LegendItemListener;
-  mouseOutAction: typeof onLegendItemOutAction;
-  mouseOverAction: typeof onLegendItemOverAction;
-  clearTemporaryColorsAction: typeof clearTemporaryColorsAction;
-  setTemporaryColorAction: typeof setTemporaryColorAction;
-  setPersistedColorAction: typeof setPersistedColorAction;
-  toggleDeselectSeriesAction: typeof onToggleDeselectSeriesAction;
 }
 
 interface LegendItemState {

@@ -10,8 +10,8 @@ import React from 'react';
 
 import { LegendTableBody } from './legend_table_body';
 import { LegendTableHeader } from './legend_table_header';
-import { SharedLegendItemProps } from './legend_table_item';
 import { LegendItem } from '../../../common/legend';
+import { SharedLegendItemProps } from '../types';
 
 /** @internal */
 export interface LegendTableProps extends SharedLegendItemProps {
@@ -32,7 +32,11 @@ export function LegendTable({ items, ...itemProps }: LegendTableProps) {
           gridTemplateColumns: `${COLOR_DOT_CHECK_WIDTH} minmax(50%, auto) repeat(${gridRowLength}, auto)`,
         }}
       >
-        <LegendTableHeader hasAction={!!itemProps.action} legendValues={itemProps.legendValues} />
+        <LegendTableHeader
+          hasAction={!!itemProps.action}
+          legendValues={itemProps.legendValues}
+          headerTitle={itemProps.headerTitle}
+        />
         <LegendTableBody items={items} {...itemProps} />
       </div>
     </div>

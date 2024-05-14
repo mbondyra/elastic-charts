@@ -20,7 +20,15 @@ export interface LegendHeaderProps {
 }
 
 /** @internal */
-export const LegendTableHeader = ({ hasAction, legendValues }: { legendValues: LegendValue[]; hasAction: boolean }) => {
+export const LegendTableHeader = ({
+  hasAction,
+  legendValues,
+  headerTitle = 'Legend',
+}: {
+  legendValues: LegendValue[];
+  hasAction: boolean;
+  headerTitle?: string;
+}) => {
   const filteredLegendValues = legendValues.filter((v) => v !== LegendValue.CurrentAndLastValue);
   if (filteredLegendValues.length === 0) {
     return null;
@@ -30,7 +38,7 @@ export const LegendTableHeader = ({ hasAction, legendValues }: { legendValues: L
     <div role="rowgroup" className="echLegendTable__rowgroup echLegendTable__header">
       <LegendTableRow className="echLegendSingleItem echLegendSingleItem--vertical">
         <LegendTableCell className="echLegend__colorWrapper echLegendTable__colorCell"></LegendTableCell>
-        <LegendTableCell>Legend</LegendTableCell>
+        <LegendTableCell>{headerTitle}</LegendTableCell>
         {legendValues.map((l) => (
           <LegendTableCell className="echLegendSingleItem__legendValue" key={l}>
             {legendValueTitlesMap[l]}
