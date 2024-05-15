@@ -10,12 +10,14 @@ import { getChartThemeSelector } from './get_chart_theme';
 import { getLegendConfigSelector } from './get_legend_config_selector';
 import { getLegendItemsSelector } from './get_legend_items';
 import { DEFAULT_FONT_FAMILY } from '../../common/default_theme_attributes';
+import { LegendItem, shouldDisplayTable } from '../../common/legend';
 import { LEGEND_HIERARCHY_MARGIN } from '../../components/legend/legend_item';
 import { LEGEND_TO_FULL_CONFIG } from '../../components/legend/position_style';
 import { LegendPositionConfig } from '../../specs/settings';
 import { withTextMeasure } from '../../utils/bbox/canvas_text_bbox_calculator';
 import { isDefined, LayoutDirection, Position } from '../../utils/common';
-import { Size } from '../../utils/dimensions';
+import { Dimensions, Size } from '../../utils/dimensions';
+import { Theme } from '../../utils/themes/theme';
 import { GlobalChartState } from '../chart_state';
 import { createCustomCachedSelector } from '../create_selector';
 
@@ -27,6 +29,12 @@ const SHARED_MARGIN = 4;
 const VERTICAL_PADDING = 4;
 const TOP_MARGIN = 2;
 
+const GRID_CELL_PADDING = { height: 4, width: 8 };
+const GRID_MARGIN = 8;
+const HORIZONTAL_GRID_LINE_NUMBER = 3;
+const GRID_COLOR_PICKER_WIDTH = 10;
+const GRID_ACTION_WIDTH = 26;
+
 /** @internal */
 export type LegendSizing = Size & {
   margin: number;
@@ -36,14 +44,13 @@ export type LegendSizing = Size & {
 /** @internal */
 export const getLegendSizeSelector = createCustomCachedSelector(
   [getLegendConfigSelector, getChartThemeSelector, getParentDimensionSelector, getLegendItemsSelector],
-  (
-    { showLegend, legendSize, legendValues, legendPosition, legendAction },
-    theme,
-    parentDimensions,
-    items,
-  ): LegendSizing => {
+  (config, theme, parentDimensions, items): LegendSizing => {
+    const { showLegend, legendSize, legendValues, legendPosition, legendAction } = config;
     if (!showLegend) {
       return { width: 0, height: 0, margin: 0, position: LEGEND_TO_FULL_CONFIG[Position.Right] };
+    }
+    if (shouldDisplayTable(legendValues)) {
+      return getLegendTableSize(config, theme, parentDimensions, items);
     }
 
     const bbox = withTextMeasure((textMeasure) =>
@@ -104,3 +111,78 @@ export const getLegendSizeSelector = createCustomCachedSelector(
     };
   },
 );
+
+function getLegendTableSize(
+  config: ReturnType<typeof getLegendConfigSelector>,
+  theme: Theme,
+  parentDimensions: Dimensions,
+  items: LegendItem[],
+): LegendSizing {
+  const { legendSize, legendValues, legendPosition, legendAction } = config;
+
+  const bbox = withTextMeasure((textMeasure) =>
+    items.reduce(
+      (acc, { label, values }) => {
+        const legendValuesText = values.map((v) => v.label).join('');
+
+        const seriesText = `${label}${legendValuesText}`;
+        const { width, height } = textMeasure(
+          seriesText,
+          { fontFamily: DEFAULT_FONT_FAMILY, fontVariant: 'normal', fontWeight: 400, fontStyle: 'normal' },
+          12,
+          1.34,
+        );
+        acc.width = Math.max(
+          acc.width,
+          GRID_COLOR_PICKER_WIDTH + width + (values.length + 1) * GRID_CELL_PADDING.width,
+        );
+        acc.height = Math.max(acc.height, height);
+        return acc;
+      },
+      { width: 0, height: 0 },
+    ),
+  );
+
+  const {
+    legend: { verticalWidth, spacingBuffer, margin },
+  } = theme;
+
+  const actionDimension = isDefined(legendAction) ? GRID_ACTION_WIDTH : 0; // max width plus margin
+  // COLOR PICKER - LABEL - VALUES - ACTION
+  const legendItemWidth =
+    GRID_COLOR_PICKER_WIDTH + bbox.width + (legendValues.length + 1) * GRID_CELL_PADDING.width + actionDimension;
+
+  if (legendPosition.direction === LayoutDirection.Vertical) {
+    const legendItemHeight = bbox.height + VERTICAL_PADDING * 2;
+    const legendHeight = legendItemHeight * items.length + TOP_MARGIN;
+    const scrollBarDimension = legendHeight > parentDimensions.height ? SCROLL_BAR_WIDTH : 0;
+    const staticWidth = spacingBuffer + actionDimension + scrollBarDimension;
+
+    const maxAvailableWidth = parentDimensions.width * 0.5;
+
+    const width = Number.isFinite(legendSize)
+      ? Math.min(Math.max(legendSize, legendItemWidth * 0.3 + staticWidth), maxAvailableWidth)
+      : Math.floor(Math.min(legendItemWidth + staticWidth, maxAvailableWidth));
+
+    return {
+      width,
+      height: legendHeight,
+      margin,
+      position: legendPosition,
+    };
+  }
+  const isSingleLine = (parentDimensions.width - 20) / 200 > items.length;
+  const singleLineHeight = bbox.height + GRID_CELL_PADDING.height * 2;
+  const height = Number.isFinite(legendSize)
+    ? Math.min(legendSize, parentDimensions.height * 0.7)
+    : isSingleLine
+      ? singleLineHeight + GRID_MARGIN
+      : singleLineHeight * HORIZONTAL_GRID_LINE_NUMBER + GRID_MARGIN;
+
+  return {
+    height,
+    width: Math.floor(Math.min(legendItemWidth + spacingBuffer + actionDimension, verticalWidth)),
+    margin,
+    position: legendPosition,
+  };
+}
