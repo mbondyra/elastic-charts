@@ -9,15 +9,19 @@
 import classNames from 'classnames';
 import React, { Component, CSSProperties } from 'react';
 
-import { Label as ItemLabel } from './label';
-import { LegendActionComponent } from './legend_action';
-import { LegendColorPicker } from './legend_color_picker';
-import { SharedLegendItemProps } from './types';
-import { getExtra } from './utils';
-import { LegendItem, LegendItemExtraValues, LegendValue } from '../../common/legend';
-import { SeriesIdentifier } from '../../common/series_id';
-import { LayoutDirection } from '../../utils/common';
-import { deepEqual } from '../../utils/fast_deep_equal';
+import { LegendTableCell } from './legend_table_cell';
+import { LegendTableRow } from './legend_table_row';
+import { LegendValueComponent } from './legend_value';
+import { nonNullable } from '../../../chart_types/xy_chart/state/utils/get_legend_values';
+import { LegendItem, LegendValue } from '../../../common/legend';
+import { SeriesIdentifier } from '../../../common/series_id';
+import { LayoutDirection } from '../../../utils/common';
+import { deepEqual } from '../../../utils/fast_deep_equal';
+import { Label as ItemLabel } from '../label';
+import { LegendActionComponent } from '../legend_action';
+import { LegendColorPicker as LegendColorPickerComponent } from '../legend_color_picker';
+import { SharedLegendItemProps } from '../types';
+import { getExtra } from '../utils';
 
 /** @internal */
 export const LEGEND_HIERARCHY_MARGIN = 10;
@@ -26,21 +30,6 @@ export const LEGEND_HIERARCHY_MARGIN = 10;
 export interface LegendItemProps extends SharedLegendItemProps {
   item: LegendItem;
 }
-
-const prepareLegendValue = (
-  item: LegendItem,
-  legendValues: LegendValue[],
-  totalItems: number,
-  extraValues: Map<string, LegendItemExtraValues>,
-) => {
-  if (legendValues.length === 0) {
-    return undefined;
-  }
-  if (legendValues[0] === LegendValue.CurrentAndLastValue) {
-    return getExtra(extraValues, item, totalItems);
-  }
-  return item.values[0];
-};
 
 /** @internal */
 export class LegendListItem extends Component<LegendItemProps> {
@@ -69,7 +58,7 @@ export class LegendListItem extends Component<LegendItemProps> {
   };
 
   /**
-   * Returns click function only if toggleable or click listern is provided
+   * Returns click function only if toggleable or click listener is provided
    */
   onLabelToggle = (legendItemId: SeriesIdentifier[]): ((negate: boolean) => void) | undefined => {
     const { item, onClick, toggleDeselectSeriesAction, totalItems } = this.props;
@@ -92,7 +81,6 @@ export class LegendListItem extends Component<LegendItemProps> {
     const {
       extraValues,
       item,
-      legendValues,
       totalItems,
       action: Action,
       positionConfig,
@@ -104,33 +92,39 @@ export class LegendListItem extends Component<LegendItemProps> {
 
     if (isItemHidden) return null;
 
-    const itemClassNames = classNames('echLegendItem', {
-      'echLegendItem--hidden': isSeriesHidden,
-      'echLegendItem--vertical': positionConfig.direction === LayoutDirection.Vertical,
+    const itemClassNames = classNames('echLegendSingleItem', 'echLegendSingleItem--highlightable', {
+      'echLegendSingleItem--hidden': isSeriesHidden,
+      'echLegendSingleItem--vertical': positionConfig.direction === LayoutDirection.Vertical,
     });
 
-    // only the first for now until https://github.com/elastic/elastic-charts/issues/2096
-    const legendValue = prepareLegendValue(item, legendValues, totalItems, extraValues);
+    const legendValueItems = item.values
+      .map((v) => {
+        if (v.type === LegendValue.CurrentAndLastValue || (v && !v.type)) {
+          return getExtra(extraValues, item, totalItems);
+        }
+        return v;
+      })
+      .filter(nonNullable);
 
     const style: CSSProperties = flatLegend
       ? {}
       : {
           [isMostlyRTL ? 'marginRight' : 'marginLeft']: LEGEND_HIERARCHY_MARGIN * (item.depth ?? 0),
         };
+
     return (
-      <>
-        <li
-          className={itemClassNames}
-          onMouseEnter={this.onLegendItemMouseOver}
-          onMouseLeave={this.onLegendItemMouseOut}
-          style={style}
-          dir={isMostlyRTL ? 'rtl' : 'ltr'}
-          data-ech-series-name={label}
-        >
-          <div className="background" />
-          <div className="echLegend__colorWrapper">
-            <LegendColorPicker {...this.props} />
-          </div>
+      <LegendTableRow
+        className={itemClassNames}
+        onMouseEnter={this.onLegendItemMouseOver}
+        onMouseLeave={this.onLegendItemMouseOut}
+        style={style}
+        dir={isMostlyRTL ? 'rtl' : 'ltr'}
+        data-ech-series-name={label}
+      >
+        <LegendTableCell className="echLegend__colorWrapper echLegendTable__colorCell">
+          <LegendColorPickerComponent {...this.props} />
+        </LegendTableCell>
+        <LegendTableCell>
           <ItemLabel
             label={label}
             options={labelOptions}
@@ -138,14 +132,21 @@ export class LegendListItem extends Component<LegendItemProps> {
             onToggle={this.onLabelToggle(seriesIdentifiers)}
             isSeriesHidden={isSeriesHidden}
           />
-          {legendValue && legendValue.label !== '' && !isSeriesHidden && (
-            <div className="echLegendItem__legendValue" title={`${legendValue.label}`}>
-              {legendValue.label}
-            </div>
-          )}
-          {Action && <LegendActionComponent Action={Action} series={seriesIdentifiers} color={color} label={label} />}
-        </li>
-      </>
+        </LegendTableCell>
+
+        {legendValueItems?.map((l, i) => {
+          return (
+            <LegendTableCell key={l?.type || i}>
+              <LegendValueComponent {...l} />
+            </LegendTableCell>
+          );
+        })}
+        {Action && (
+          <LegendTableCell>
+            <LegendActionComponent Action={Action} series={seriesIdentifiers} color={color} label={label} />
+          </LegendTableCell>
+        )}
+      </LegendTableRow>
     );
   }
 }
