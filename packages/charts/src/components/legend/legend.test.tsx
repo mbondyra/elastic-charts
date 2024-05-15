@@ -23,7 +23,7 @@ describe('Legend', () => {
   it('shall render the all the series names', () => {
     const wrapper = mount(
       <Chart>
-        <Settings showLegend legendValues={[LegendValue.LastValue]} />
+        <Settings showLegend legendValues={[LegendValue.CurrentAndLastValue]} />
         <BarSeries
           id="areas"
           name="area"
@@ -91,7 +91,7 @@ describe('Legend', () => {
       <Chart>
         <Settings
           showLegend
-          legendValues={[LegendValue.LastValue]}
+          legendValues={[LegendValue.CurrentAndLastValue]}
           onLegendItemOver={onLegendItemOver}
           onLegendItemOut={onLegendItemOut}
         />
@@ -123,7 +123,7 @@ describe('Legend', () => {
     const data = dg.generateGroupedSeries(10, numberOfSeries, 'split');
     const wrapper = mount(
       <Chart>
-        <Settings showLegend legendValues={[LegendValue.LastValue]} onLegendItemClick={onLegendItemClick} />
+        <Settings showLegend legendValues={[LegendValue.CurrentAndLastValue]} onLegendItemClick={onLegendItemClick} />
         <BarSeries
           id="areas"
           xScaleType={ScaleType.Linear}
@@ -289,7 +289,7 @@ describe('Legend', () => {
       const data = [{ x: 2, y: 5 }];
       const wrapper = mount(
         <Chart>
-          <Settings showLegend legendValues={[LegendValue.LastValue]} onLegendItemClick={onLegendItemClick} />
+          <Settings showLegend legendValues={[LegendValue.CurrentAndLastValue]} onLegendItemClick={onLegendItemClick} />
           <BarSeries
             id="areas"
             xScaleType={ScaleType.Linear}

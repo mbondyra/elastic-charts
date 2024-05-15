@@ -883,6 +883,7 @@ describe('Series', () => {
         }),
         new Map(),
       );
+      console.log(splitSeries.dataSeries.values());
       expect([...splitSeries.dataSeries.values()].length).toBe(4);
       expect([...splitSeries.dataSeries.values()].map(matchOnlyDataSeriesLegacySnapshot)).toMatchSnapshot();
     });

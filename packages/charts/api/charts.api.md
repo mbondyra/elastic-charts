@@ -1817,6 +1817,7 @@ export type LegendItemListener = (series: SeriesIdentifier[]) => void;
 export type LegendItemValue = {
     value: PrimitiveValue;
     label: string;
+    type?: LegendValue; 
 };
 
 // @public (undocumented)

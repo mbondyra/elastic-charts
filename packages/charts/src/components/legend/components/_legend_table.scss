@@ -1,0 +1,94 @@
+@import '../variables';
+@import '../../mixins';
+
+.echLegendTable__container {
+  @include euiYScrollWithShadows;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-left: $euiSizeS;
+  padding-left: $euiSizeS;
+
+  :focus {
+    @include euiFocusRing(null, 1);
+    background-color: $euiFocusBackgroundColor;
+    border-radius: $euiBorderRadius / 2;
+  }
+}
+
+.echLegend {
+  z-index: 1;
+  .echLegendTable {
+    overflow: auto;
+    display: grid;
+    width: 100%;
+    position: relative;
+
+    &__header,
+    &__rowgroup,
+    &__row {
+      // This ignores all above elements for positioning
+      // effectively spreading all children in its place
+      display: contents;
+    }
+  }
+  &--vertical {
+    max-width: 50%;
+
+    .echLegendTable__container {
+      padding-bottom: $euiSizeXS;
+      margin-top: $echLegendRowGap;
+      margin-bottom: $echLegendRowGap;
+      padding-left: $echLegendRowGap;
+      padding-right: $echLegendRowGap;
+    }
+
+    &.echLegend--right .echLegendTable__container {
+      padding-right: 0;
+    }
+    &.echLegend--left .echLegendTable__container {
+      padding-left: 0;
+    }
+  }
+  &--horizontal {
+    .echLegendTable {
+      margin-top: $echLegendRowGap;
+      margin-bottom: $echLegendRowGap;
+      padding-left: $echLegendRowGap;
+      padding-right: $echLegendRowGap;
+    }
+  }
+
+  &--top,
+  &--left {
+    order: 0;
+  }
+
+  &--bottom,
+  &--right {
+    order: 1;
+  }
+
+  &--debug {
+    background: rgba(238, 130, 238, 0.2);
+    position: relative;
+  }
+
+  &--inert {
+    pointer-events: none;
+  }
+}
+
+.echLegend__colorWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+.echColorPickerPopover {
+  display: flex;
+  align-items: center;
+}

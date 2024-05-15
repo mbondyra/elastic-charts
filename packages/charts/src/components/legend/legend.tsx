@@ -11,11 +11,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch, bindActionCreators } from 'redux';
 
+import { LegendTable } from './components/legend_table';
 import { CustomLegend } from './custom_legend';
 import { LegendItemProps, LegendListItem } from './legend_item';
 import { getLegendPositionConfig, legendPositionStyle } from './position_style';
 import { getLegendStyle, getLegendListStyle } from './style_utils';
-import { LegendItem, LegendItemExtraValues } from '../../common/legend';
+import { LegendItem, LegendItemExtraValues, LegendValue } from '../../common/legend';
 import { DEFAULT_LEGEND_CONFIG, LegendSpec } from '../../specs';
 import { clearTemporaryColors, setTemporaryColor, setPersistedColor } from '../../state/actions/colors';
 import {
@@ -111,7 +112,10 @@ function LegendComponent(props: LegendStateProps & LegendDispatchProps) {
     action: config.legendAction,
     labelOptions: legend.labelOptions,
     flatLegend: config.flatLegend ?? DEFAULT_LEGEND_CONFIG.flatLegend,
+    legendTitle: config.legendTitle,
   };
+  const shouldDisplayTable = !!itemProps.legendValues.filter((v) => v !== LegendValue.CurrentAndLastValue).length;
+
   const positionStyle = legendPositionStyle(config, size, chartDimensions, containerDimensions);
   return (
     <div className={legendClasses} style={positionStyle} dir={isMostlyRTL ? 'rtl' : 'ltr'}>
@@ -129,6 +133,10 @@ function LegendComponent(props: LegendStateProps & LegendDispatchProps) {
               onItemClickAction: (negate: boolean) => itemProps.toggleDeselectSeriesAction(seriesIdentifiers, negate),
             }))}
           />
+        </div>
+      ) : shouldDisplayTable ? (
+        <div style={containerStyle}>
+          <LegendTable items={items} {...itemProps} />
         </div>
       ) : (
         <div style={containerStyle} className="echLegendListContainer">

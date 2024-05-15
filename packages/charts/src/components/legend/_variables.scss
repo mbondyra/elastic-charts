@@ -1,3 +1,11 @@
-$echLegendMaxWidth: 200px;
+$tableRowHoverColor: $euiColorLightestShade;
+$legendBorderColor: $euiColorLightestShade;
+
 $echLegendRowGap: 8px;
-$echLegendColumnGap: 24px;
+$echLegendColumnGap: 8px;
+
+$legendItemVerticalPadding: $echLegendRowGap / 2;
+
+$legendBorderWidth: 1px;
+$tableBorder: solid $legendBorderWidth $legendBorderColor;
+$tableOutsideBorder: solid $legendBorderWidth $euiColorLightShade;

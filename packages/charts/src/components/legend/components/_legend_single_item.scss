@@ -1,0 +1,81 @@
+@import '../variables';
+@import '../../mixins';
+
+.echLegendSingleItem {
+  color: $euiTextColor;
+
+  &:last-child .echLegendTable__cell {
+    border-bottom: $tableOutsideBorder;
+  }
+
+  &--highlightable {
+    .echLegendTable__cell:hover {
+      background-color: $tableRowHoverColor;
+    }
+
+    .echLegendTable__cell:hover ~ .echLegendTable__cell {
+      background-color: $tableRowHoverColor;
+    }
+
+    .echLegendTable__cell:has(~ .echLegendTable__cell:hover) {
+      background-color: $tableRowHoverColor;
+    }
+  }
+
+  &:not([dir='rtl']) > * {
+    padding-left: $euiSizeS;
+
+    // &:last-child:not(.echLegend__legendValue) {
+    //   padding-right: $euiSizeXS;
+    // }
+  }
+
+  &[dir='rtl'] > * {
+    padding-right: $euiSizeXS;
+
+    // &:last-child:not(.echLegend__legendValue) {
+    //   padding-left: $euiSizeXS;
+    // }
+  }
+
+  &[dir='rtl'] .echLegend__legendValue {
+    text-align: left;
+  }
+
+  &:not(&--hidden) {
+    .echLegendSingleItem__color--changable {
+      cursor: pointer;
+    }
+  }
+
+  .echLegendTable__cell:last-child {
+    padding-right: $euiSizeXS/2;
+  }
+
+  &--vertical {
+    padding-top: $legendItemVerticalPadding / 2;
+    padding-bottom: $legendItemVerticalPadding / 2;
+
+    &:first-of-type {
+      margin-top: $legendItemVerticalPadding / 2;
+    }
+  }
+
+  &--hidden {
+    color: $euiColorDarkShade;
+  }
+
+  .echLegendItem__action {
+    height: inherit;
+  }
+
+  .echLegend__legendValue {
+    @include euiFontSizeXS;
+    text-align: right;
+    flex: 0 0 auto;
+    font-feature-settings: 'tnum';
+    letter-spacing: unset;
+    direction: ltr;
+    white-space: nowrap;
+  }
+}
