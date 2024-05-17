@@ -13,9 +13,6 @@ import { LegendItemProps } from './legend_item';
 import { Color } from '../../common/colors';
 
 /** @internal */
-export const LEGEND_HIERARCHY_MARGIN = 10;
-
-/** @internal */
 export const LegendColorPicker = ({
   item: { color, isSeriesHidden, label, pointStyle, seriesIdentifiers },
   colorPicker: ColorPickerRenderer,

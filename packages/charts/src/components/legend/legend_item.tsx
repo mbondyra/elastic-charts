@@ -7,7 +7,7 @@
  */
 
 import classNames from 'classnames';
-import React, { Component, createRef, MouseEventHandler, CSSProperties } from 'react';
+import React, { CSSProperties, useRef, useState, useCallback } from 'react';
 
 import { Color as ItemColor } from './color';
 import { Label as ItemLabel } from './label';
@@ -18,7 +18,6 @@ import { Color } from '../../common/colors';
 import { LegendItem, LegendItemExtraValues, LegendValue } from '../../common/legend';
 import { SeriesIdentifier } from '../../common/series_id';
 import { LayoutDirection } from '../../utils/common';
-import { deepEqual } from '../../utils/fast_deep_equal';
 
 /** @internal */
 export const LEGEND_HIERARCHY_MARGIN = 10;
@@ -26,11 +25,6 @@ export const LEGEND_HIERARCHY_MARGIN = 10;
 /** @internal */
 export interface LegendItemProps extends SharedLegendItemProps {
   item: LegendItem;
-}
-
-interface LegendItemState {
-  isOpen: boolean;
-  actionActive: boolean;
 }
 
 const prepareLegendValue = (
@@ -47,179 +41,167 @@ const prepareLegendValue = (
   }
   return item.values[0];
 };
-
 /** @internal */
-export class LegendListItem extends Component<LegendItemProps, LegendItemState> {
-  static displayName = 'LegendItem';
+export const LegendListItem: React.FC<LegendItemProps> = (props) => {
+  const {
+    extraValues,
+    item,
+    legendValues,
+    colorPicker,
+    totalItems,
+    action: Action,
+    positionConfig,
+    labelOptions,
+    isMostlyRTL,
+    flatLegend,
+    onClick,
+    toggleDeselectSeriesAction,
+    onMouseOver,
+    mouseOverAction,
+    onMouseOut,
+    mouseOutAction,
+    setPersistedColorAction,
+    clearTemporaryColorsAction,
+    setTemporaryColorAction,
+    colorPicker: ColorPicker,
+    hiddenItems,
+  } = props;
+  const { color, isSeriesHidden, isItemHidden, seriesIdentifiers, label, pointStyle, depth, path, isToggleable } = item;
 
-  shouldClearPersistedColor = false;
+  const itemClassNames = classNames('echLegendItem', {
+    'echLegendItem--hidden': isSeriesHidden,
+    'echLegendItem--vertical': positionConfig.direction === LayoutDirection.Vertical,
+  });
 
-  colorRef = createRef<HTMLButtonElement>();
+  // only the first for now until https://github.com/elastic/elastic-charts/issues/2096
+  const legendValue = prepareLegendValue(item, legendValues, totalItems, extraValues);
 
-  state: LegendItemState = {
-    isOpen: false,
-    actionActive: false,
-  };
+  const style: CSSProperties = flatLegend
+    ? {}
+    : {
+        [isMostlyRTL ? 'marginRight' : 'marginLeft']: LEGEND_HIERARCHY_MARGIN * (depth ?? 0),
+      };
 
-  shouldComponentUpdate(nextProps: LegendItemProps, nextState: LegendItemState) {
-    return !deepEqual(this.props, nextProps) || !deepEqual(this.state, nextState);
-  }
+  const colorRef = useRef<HTMLButtonElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const shouldClearPersistedColor = useRef(false);
 
-  handleColorClick = (changeable: boolean): MouseEventHandler | undefined =>
-    changeable
-      ? (event) => {
-          event.stopPropagation();
-          this.toggleIsOpen();
-        }
-      : undefined;
+  const toggleIsOpen = useCallback(() => {
+    setIsOpen((prevIsOpen) => !prevIsOpen);
+  }, []);
 
-  toggleIsOpen = () => {
-    this.setState(({ isOpen }) => ({ isOpen: !isOpen }));
-  };
-
-  onLegendItemMouseOver = () => {
-    const { onMouseOver, mouseOverAction, item } = this.props;
+  const onLegendItemMouseOver = useCallback(() => {
     // call the settings listener directly if available
     if (onMouseOver) {
-      onMouseOver(item.seriesIdentifiers);
+      onMouseOver(seriesIdentifiers);
     }
-    mouseOverAction(item.path);
-  };
+    mouseOverAction(path);
+  }, [mouseOverAction, onMouseOver, path, seriesIdentifiers]);
 
-  onLegendItemMouseOut = () => {
-    const { onMouseOut, mouseOutAction } = this.props;
+  const onLegendItemMouseOut = useCallback(() => {
     // call the settings listener directly if available
     if (onMouseOut) {
       onMouseOut();
     }
     mouseOutAction();
-  };
+  }, [onMouseOut, mouseOutAction]);
 
-  /**
-   * Returns click function only if toggleable or click listern is provided
-   */
-  onLabelToggle = (legendItemId: SeriesIdentifier[]): ((negate: boolean) => void) | undefined => {
-    const { item, onClick, toggleDeselectSeriesAction, totalItems } = this.props;
-    if (totalItems <= 1 || (!item.isToggleable && !onClick)) {
-      return;
-    }
+  const onLabelToggle = useCallback(
+    (legendItemId: SeriesIdentifier[]) => (negate: boolean) => {
+      if (totalItems <= 1 || (!isToggleable && !onClick)) {
+        return;
+      }
 
-    return (negate) => {
       if (onClick) {
         onClick(legendItemId);
       }
 
-      if (item.isToggleable) {
+      if (isToggleable) {
         toggleDeselectSeriesAction(legendItemId, negate);
       }
-    };
-  };
+    },
+    [onClick, toggleDeselectSeriesAction, isToggleable, totalItems],
+  );
 
-  renderColorPicker() {
-    const {
-      colorPicker: ColorPicker,
-      item,
-      clearTemporaryColorsAction,
-      setTemporaryColorAction,
-      setPersistedColorAction,
-    } = this.props;
-    const { seriesIdentifiers, color } = item;
-    const seriesKeys = seriesIdentifiers.map(({ key }) => key);
-    const handleClose = () => {
-      setPersistedColorAction(seriesKeys, this.shouldClearPersistedColor ? null : color);
-      clearTemporaryColorsAction();
-      requestAnimationFrame(() => this.colorRef?.current?.focus());
-      this.toggleIsOpen();
-    };
-    const handleChange = (c: Color | null) => {
-      this.shouldClearPersistedColor = c === null;
-      setTemporaryColorAction(seriesKeys, c);
-    };
-    if (ColorPicker && this.state.isOpen && this.colorRef.current) {
-      return (
-        <ColorPicker
-          anchor={this.colorRef.current}
-          color={color}
-          onClose={handleClose}
-          onChange={handleChange}
-          seriesIdentifiers={seriesIdentifiers}
-        />
-      );
+  const renderColorPicker = useCallback(() => {
+    if (!ColorPicker || !isOpen || !colorRef.current) {
+      return null;
     }
-  }
 
-  render() {
-    const {
-      extraValues,
-      item,
-      legendValues,
-      colorPicker,
-      totalItems,
-      hiddenItems,
-      action: Action,
-      positionConfig,
-      labelOptions,
-      isMostlyRTL,
-      flatLegend,
-    } = this.props;
-    const { color, isSeriesHidden, isItemHidden, seriesIdentifiers, label, pointStyle } = item;
+    const seriesKeys = seriesIdentifiers.map(({ key }) => key);
 
-    if (isItemHidden) return null;
-
-    const itemClassNames = classNames('echLegendItem', {
-      'echLegendItem--hidden': isSeriesHidden,
-      'echLegendItem--vertical': positionConfig.direction === LayoutDirection.Vertical,
-    });
-    const hasColorPicker = Boolean(colorPicker);
-
-    // only the first for now until https://github.com/elastic/elastic-charts/issues/2096
-    const legendValue = prepareLegendValue(item, legendValues, totalItems, extraValues);
-
-    const style: CSSProperties = flatLegend
-      ? {}
-      : {
-          [isMostlyRTL ? 'marginRight' : 'marginLeft']: LEGEND_HIERARCHY_MARGIN * (item.depth ?? 0),
-        };
     return (
-      <>
-        <li
-          className={itemClassNames}
-          onMouseEnter={this.onLegendItemMouseOver}
-          onMouseLeave={this.onLegendItemMouseOut}
-          style={style}
-          dir={isMostlyRTL ? 'rtl' : 'ltr'}
-          data-ech-series-name={label}
-        >
-          <div className="background" />
-          <div className="echLegend__colorWrapper">
-            <ItemColor
-              ref={this.colorRef}
-              color={color}
-              seriesName={label}
-              isSeriesHidden={isSeriesHidden}
-              hasColorPicker={hasColorPicker}
-              onClick={this.handleColorClick(hasColorPicker)}
-              pointStyle={pointStyle}
-            />
-          </div>
-          <ItemLabel
-            label={label}
-            options={labelOptions}
-            isToggleable={totalItems > 1 && item.isToggleable}
-            onToggle={this.onLabelToggle(seriesIdentifiers)}
-            isSeriesHidden={isSeriesHidden}
-            totalSeriesCount={totalItems}
-            hiddenSeriesCount={hiddenItems}
-          />
-          {legendValue && legendValue.label !== '' && !isSeriesHidden && (
-            <div className="echLegendItem__legendValue" title={`${legendValue.label}`}>
-              {legendValue.label}
-            </div>
-          )}
-          {Action && <LegendActionComponent Action={Action} series={seriesIdentifiers} color={color} label={label} />}
-        </li>
-        {this.renderColorPicker()}
-      </>
+      <ColorPicker
+        anchor={colorRef.current}
+        color={color}
+        onClose={() => {
+          setPersistedColorAction(seriesKeys, shouldClearPersistedColor.current ? null : color);
+          clearTemporaryColorsAction();
+          requestAnimationFrame(() => colorRef?.current?.focus());
+          toggleIsOpen();
+        }}
+        onChange={(c: Color | null) => {
+          shouldClearPersistedColor.current = c === null;
+          setTemporaryColorAction(seriesKeys, c);
+        }}
+        seriesIdentifiers={seriesIdentifiers}
+      />
     );
-  }
-}
+  }, [
+    ColorPicker,
+    toggleIsOpen,
+    color,
+    seriesIdentifiers,
+    setPersistedColorAction,
+    clearTemporaryColorsAction,
+    setTemporaryColorAction,
+    isOpen,
+  ]);
+
+  if (isItemHidden) return null;
+
+  return (
+    <>
+      <li
+        className={itemClassNames}
+        onMouseEnter={onLegendItemMouseOver}
+        onMouseLeave={onLegendItemMouseOut}
+        style={style}
+        dir={isMostlyRTL ? 'rtl' : 'ltr'}
+        data-ech-series-name={label}
+      >
+        <div className="background" />
+        <div className="echLegend__colorWrapper">
+          <ItemColor
+            ref={colorRef}
+            color={color}
+            seriesName={label}
+            isSeriesHidden={isSeriesHidden}
+            hasColorPicker={Boolean(colorPicker)}
+            onClick={(event: React.MouseEvent) => {
+              event.stopPropagation();
+              toggleIsOpen();
+            }}
+            pointStyle={pointStyle}
+          ></ItemColor>
+        </div>
+        <ItemLabel
+          label={label}
+          options={labelOptions}
+          isToggleable={totalItems > 1 && item.isToggleable}
+          onToggle={onLabelToggle(seriesIdentifiers)}
+          isSeriesHidden={isSeriesHidden}
+          totalSeriesCount={totalItems}
+          hiddenSeriesCount={hiddenItems}
+        />
+        {legendValue && legendValue.label !== '' && !isSeriesHidden && (
+          <div className="echLegendItem__legendValue" title={`${legendValue.label}`}>
+            {legendValue.label}
+          </div>
+        )}
+        {Action && <LegendActionComponent Action={Action} series={seriesIdentifiers} color={color} label={label} />}
+      </li>
+      {renderColorPicker()}
+    </>
+  );
+};
