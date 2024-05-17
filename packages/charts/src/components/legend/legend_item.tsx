@@ -7,13 +7,14 @@
  */
 
 import classNames from 'classnames';
-import React, { Component, CSSProperties } from 'react';
+import React, { Component, createRef, MouseEventHandler, CSSProperties } from 'react';
 
+import { Color as ItemColor } from './color';
 import { Label as ItemLabel } from './label';
 import { LegendActionComponent } from './legend_action';
-import { LegendColorPicker } from './legend_color_picker';
 import { SharedLegendItemProps } from './types';
 import { getExtra } from './utils';
+import { Color } from '../../common/colors';
 import { LegendItem, LegendItemExtraValues, LegendValue } from '../../common/legend';
 import { SeriesIdentifier } from '../../common/series_id';
 import { LayoutDirection } from '../../utils/common';
@@ -25,6 +26,11 @@ export const LEGEND_HIERARCHY_MARGIN = 10;
 /** @internal */
 export interface LegendItemProps extends SharedLegendItemProps {
   item: LegendItem;
+}
+
+interface LegendItemState {
+  isOpen: boolean;
+  actionActive: boolean;
 }
 
 const prepareLegendValue = (
@@ -43,12 +49,33 @@ const prepareLegendValue = (
 };
 
 /** @internal */
-export class LegendListItem extends Component<LegendItemProps> {
+export class LegendListItem extends Component<LegendItemProps, LegendItemState> {
   static displayName = 'LegendItem';
 
-  shouldComponentUpdate(nextProps: LegendItemProps) {
-    return !deepEqual(this.props, nextProps);
+  shouldClearPersistedColor = false;
+
+  colorRef = createRef<HTMLButtonElement>();
+
+  state: LegendItemState = {
+    isOpen: false,
+    actionActive: false,
+  };
+
+  shouldComponentUpdate(nextProps: LegendItemProps, nextState: LegendItemState) {
+    return !deepEqual(this.props, nextProps) || !deepEqual(this.state, nextState);
   }
+
+  handleColorClick = (changeable: boolean): MouseEventHandler | undefined =>
+    changeable
+      ? (event) => {
+          event.stopPropagation();
+          this.toggleIsOpen();
+        }
+      : undefined;
+
+  toggleIsOpen = () => {
+    this.setState(({ isOpen }) => ({ isOpen: !isOpen }));
+  };
 
   onLegendItemMouseOver = () => {
     const { onMouseOver, mouseOverAction, item } = this.props;
@@ -88,11 +115,45 @@ export class LegendListItem extends Component<LegendItemProps> {
     };
   };
 
+  renderColorPicker() {
+    const {
+      colorPicker: ColorPicker,
+      item,
+      clearTemporaryColorsAction,
+      setTemporaryColorAction,
+      setPersistedColorAction,
+    } = this.props;
+    const { seriesIdentifiers, color } = item;
+    const seriesKeys = seriesIdentifiers.map(({ key }) => key);
+    const handleClose = () => {
+      setPersistedColorAction(seriesKeys, this.shouldClearPersistedColor ? null : color);
+      clearTemporaryColorsAction();
+      requestAnimationFrame(() => this.colorRef?.current?.focus());
+      this.toggleIsOpen();
+    };
+    const handleChange = (c: Color | null) => {
+      this.shouldClearPersistedColor = c === null;
+      setTemporaryColorAction(seriesKeys, c);
+    };
+    if (ColorPicker && this.state.isOpen && this.colorRef.current) {
+      return (
+        <ColorPicker
+          anchor={this.colorRef.current}
+          color={color}
+          onClose={handleClose}
+          onChange={handleChange}
+          seriesIdentifiers={seriesIdentifiers}
+        />
+      );
+    }
+  }
+
   render() {
     const {
       extraValues,
       item,
       legendValues,
+      colorPicker,
       totalItems,
       hiddenItems,
       action: Action,
@@ -101,7 +162,7 @@ export class LegendListItem extends Component<LegendItemProps> {
       isMostlyRTL,
       flatLegend,
     } = this.props;
-    const { color, isSeriesHidden, isItemHidden, seriesIdentifiers, label } = item;
+    const { color, isSeriesHidden, isItemHidden, seriesIdentifiers, label, pointStyle } = item;
 
     if (isItemHidden) return null;
 
@@ -109,6 +170,7 @@ export class LegendListItem extends Component<LegendItemProps> {
       'echLegendItem--hidden': isSeriesHidden,
       'echLegendItem--vertical': positionConfig.direction === LayoutDirection.Vertical,
     });
+    const hasColorPicker = Boolean(colorPicker);
 
     // only the first for now until https://github.com/elastic/elastic-charts/issues/2096
     const legendValue = prepareLegendValue(item, legendValues, totalItems, extraValues);
@@ -130,7 +192,15 @@ export class LegendListItem extends Component<LegendItemProps> {
         >
           <div className="background" />
           <div className="echLegend__colorWrapper">
-            <LegendColorPicker {...this.props} />
+            <ItemColor
+              ref={this.colorRef}
+              color={color}
+              seriesName={label}
+              isSeriesHidden={isSeriesHidden}
+              hasColorPicker={hasColorPicker}
+              onClick={this.handleColorClick(hasColorPicker)}
+              pointStyle={pointStyle}
+            />
           </div>
           <ItemLabel
             label={label}
@@ -148,6 +218,7 @@ export class LegendListItem extends Component<LegendItemProps> {
           )}
           {Action && <LegendActionComponent Action={Action} series={seriesIdentifiers} color={color} label={label} />}
         </li>
+        {this.renderColorPicker()}
       </>
     );
   }
