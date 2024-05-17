@@ -16,7 +16,7 @@ import { Color } from '../../common/colors';
 export const LEGEND_HIERARCHY_MARGIN = 10;
 
 /** @internal */
-export const LegendColorPicker = ({
+export const useLegendColorPicker = ({
   item: { color, isSeriesHidden, label, pointStyle, seriesIdentifiers },
   colorPicker: ColorPickerRenderer,
   clearTemporaryColorsAction,
@@ -54,26 +54,32 @@ export const LegendColorPicker = ({
 
   const hasColorPicker = Boolean(ColorPickerRenderer);
 
-  return (
-    <>
-      <ItemColor
-        ref={colorRef}
-        color={color}
-        seriesName={label}
-        isSeriesHidden={isSeriesHidden}
-        hasColorPicker={hasColorPicker}
-        onClick={handleColorClick(hasColorPicker)}
-        pointStyle={pointStyle}
-      />
-      {ColorPickerRenderer && isOpen && colorRef.current && (
-        <ColorPickerRenderer
-          anchor={colorRef.current}
-          color={color}
-          onClose={handleColorPickerClose}
-          onChange={handleColorPickerChange}
-          seriesIdentifiers={seriesIdentifiers}
-        />
-      )}
-    </>
+  const ColorPickerTrigger = (
+    <ItemColor
+      ref={colorRef}
+      color={color}
+      seriesName={label}
+      isSeriesHidden={isSeriesHidden}
+      hasColorPicker={hasColorPicker}
+      onClick={handleColorClick(hasColorPicker)}
+      pointStyle={pointStyle}
+    />
   );
+
+  const renderColorPicker = () => {
+    return ColorPickerRenderer && isOpen && colorRef.current ? (
+      <ColorPickerRenderer
+        anchor={colorRef.current}
+        color={color}
+        onClose={handleColorPickerClose}
+        onChange={handleColorPickerChange}
+        seriesIdentifiers={seriesIdentifiers}
+      />
+    ) : null;
+  };
+
+  return {
+    ColorPickerTrigger,
+    renderColorPicker,
+  };
 };

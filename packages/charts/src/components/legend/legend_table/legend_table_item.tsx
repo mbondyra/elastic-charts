@@ -19,8 +19,8 @@ import { LayoutDirection } from '../../../utils/common';
 import { deepEqual } from '../../../utils/fast_deep_equal';
 import { Label as ItemLabel } from '../label';
 import { LegendActionComponent } from '../legend_action';
-import { LegendColorPicker as LegendColorPickerComponent } from '../legend_color_picker';
 import { SharedLegendItemProps } from '../types';
+import { useLegendColorPicker } from '../use_legend_color_picker';
 import { getExtra } from '../utils';
 
 /** @internal */
@@ -111,6 +111,7 @@ export class LegendListItem extends Component<LegendItemProps> {
       : {
           [isMostlyRTL ? 'marginRight' : 'marginLeft']: LEGEND_HIERARCHY_MARGIN * (item.depth ?? 0),
         };
+    const { ColorPickerTrigger, renderColorPicker } = useLegendColorPicker(this.props);
 
     return (
       <LegendTableRow
@@ -122,7 +123,8 @@ export class LegendListItem extends Component<LegendItemProps> {
         data-ech-series-name={label}
       >
         <LegendTableCell className="echLegend__colorWrapper echLegendTable__colorCell">
-          <LegendColorPickerComponent {...this.props} />
+          <ColorPickerTrigger />
+          {renderColorPicker()}
         </LegendTableCell>
         <LegendTableCell>
           <ItemLabel
