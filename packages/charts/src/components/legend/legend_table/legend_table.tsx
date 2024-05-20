@@ -8,11 +8,10 @@
 
 import React from 'react';
 
-import { LayoutDirection } from '@elastic/charts';
-
 import { LegendTableBody } from './legend_table_body';
 import { LegendTableHeader } from './legend_table_header';
 import { LegendItem } from '../../../common/legend';
+import { LayoutDirection } from '../../../utils/common';
 import { SharedLegendItemProps } from '../types';
 
 /** @internal */

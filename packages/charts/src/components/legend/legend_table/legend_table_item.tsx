@@ -7,24 +7,27 @@
  */
 
 import classNames from 'classnames';
-import React, { Component, CSSProperties } from 'react';
+import React, { useCallback } from 'react';
 
 import { LegendTableCell } from './legend_table_cell';
 import { LegendTableRow } from './legend_table_row';
 import { LegendValueComponent } from './legend_value';
-import { nonNullable } from '../../../chart_types/xy_chart/state/utils/get_legend_values';
-import { LegendItem, LegendValue } from '../../../common/legend';
+import { LegendItem } from '../../../common/legend';
 import { SeriesIdentifier } from '../../../common/series_id';
 import { LayoutDirection } from '../../../utils/common';
-import { deepEqual } from '../../../utils/fast_deep_equal';
 import { Label as ItemLabel } from '../label';
 import { LegendActionComponent } from '../legend_action';
-import { LegendColorPicker as LegendColorPickerComponent } from '../legend_color_picker';
+import { useLegendColorPicker } from '../legend_color_picker';
+import { prepareLegendValues } from '../legend_item';
 import { SharedLegendItemProps } from '../types';
-import { getExtra } from '../utils';
 
 /** @internal */
 export const LEGEND_HIERARCHY_MARGIN = 10;
+
+/** @internal */
+export function nonNullable<T>(v: T): v is NonNullable<T> {
+  return v !== null || v !== undefined;
+}
 
 /** @internal */
 export interface LegendItemProps extends SharedLegendItemProps {
@@ -32,107 +35,73 @@ export interface LegendItemProps extends SharedLegendItemProps {
 }
 
 /** @internal */
-export class LegendListItem extends Component<LegendItemProps> {
-  static displayName = 'LegendItem';
+export const LegendListItem: React.FC<LegendItemProps> = (props) => {
+  const {
+    extraValues,
+    item,
+    legendValues,
+    totalItems,
+    action: Action,
+    positionConfig,
+    labelOptions,
+    isMostlyRTL,
+    onClick,
+    toggleDeselectSeriesAction,
+    onLegendItemMouseOver,
+    onLegendItemMouseOut,
+    hiddenItems,
+  } = props;
+  const { color, isSeriesHidden, isItemHidden, seriesIdentifiers, label, path, isToggleable } = item;
 
-  shouldComponentUpdate(nextProps: LegendItemProps) {
-    return !deepEqual(this.props, nextProps);
-  }
+  const itemClassNames = classNames('echLegendTable__item', 'echLegendTable__item--highlightable', {
+    'echLegendTable__item--hidden': isSeriesHidden,
+    'echLegendTable__item--vertical': positionConfig.direction === LayoutDirection.Vertical,
+  });
 
-  onLegendItemMouseOver = () => {
-    const { onMouseOver, mouseOverAction, item } = this.props;
-    // call the settings listener directly if available
-    if (onMouseOver) {
-      onMouseOver(item.seriesIdentifiers);
-    }
-    mouseOverAction(item.path);
-  };
+  const legendValueItems = prepareLegendValues(item, legendValues, totalItems, extraValues)?.filter(nonNullable);
 
-  onLegendItemMouseOut = () => {
-    const { onMouseOut, mouseOutAction } = this.props;
-    // call the settings listener directly if available
-    if (onMouseOut) {
-      onMouseOut();
-    }
-    mouseOutAction();
-  };
+  const onLabelToggle = useCallback(
+    (legendItemId: SeriesIdentifier[]) => (negate: boolean) => {
+      if (totalItems <= 1 || (!isToggleable && !onClick)) {
+        return;
+      }
 
-  /**
-   * Returns click function only if toggleable or click listener is provided
-   */
-  onLabelToggle = (legendItemId: SeriesIdentifier[]): ((negate: boolean) => void) | undefined => {
-    const { item, onClick, toggleDeselectSeriesAction, totalItems } = this.props;
-    if (totalItems <= 1 || (!item.isToggleable && !onClick)) {
-      return;
-    }
-
-    return (negate) => {
       if (onClick) {
         onClick(legendItemId);
       }
 
-      if (item.isToggleable) {
+      if (isToggleable) {
         toggleDeselectSeriesAction(legendItemId, negate);
       }
-    };
-  };
+    },
+    [onClick, toggleDeselectSeriesAction, isToggleable, totalItems],
+  );
 
-  render() {
-    const {
-      extraValues,
-      item,
-      totalItems,
-      action: Action,
-      positionConfig,
-      labelOptions,
-      isMostlyRTL,
-      flatLegend,
-    } = this.props;
-    const { color, isSeriesHidden, isItemHidden, seriesIdentifiers, label } = item;
+  const { renderItemColor, renderColorPickerPopup } = useLegendColorPicker(props);
 
-    if (isItemHidden) return null;
+  if (isItemHidden) return null;
 
-    const itemClassNames = classNames('echLegendSingleItem', 'echLegendSingleItem--highlightable', {
-      'echLegendSingleItem--hidden': isSeriesHidden,
-      'echLegendSingleItem--vertical': positionConfig.direction === LayoutDirection.Vertical,
-    });
-
-    const legendValueItems = item.values
-      .map((v) => {
-        if (v.type === LegendValue.CurrentAndLastValue || (v && !v.type)) {
-          return getExtra(extraValues, item, totalItems);
-        }
-        return v;
-      })
-      .filter(nonNullable);
-
-    const style: CSSProperties = flatLegend
-      ? {}
-      : {
-          [isMostlyRTL ? 'marginRight' : 'marginLeft']: LEGEND_HIERARCHY_MARGIN * (item.depth ?? 0),
-        };
-
-    return (
+  return (
+    <>
       <LegendTableRow
         className={itemClassNames}
-        onMouseEnter={this.onLegendItemMouseOver}
-        onMouseLeave={this.onLegendItemMouseOut}
-        style={style}
+        onMouseEnter={() => onLegendItemMouseOver(seriesIdentifiers, path)}
+        onMouseLeave={onLegendItemMouseOut}
         dir={isMostlyRTL ? 'rtl' : 'ltr'}
         data-ech-series-name={label}
       >
         <LegendTableCell className="echLegend__colorWrapper echLegendTable__colorCell">
-          <LegendColorPickerComponent {...this.props} />
+          {renderItemColor()}
         </LegendTableCell>
         <LegendTableCell>
           <ItemLabel
             label={label}
             options={labelOptions}
             isToggleable={totalItems > 1 && item.isToggleable}
-            onToggle={this.onLabelToggle(seriesIdentifiers)}
+            onToggle={onLabelToggle(seriesIdentifiers)}
             isSeriesHidden={isSeriesHidden}
             totalSeriesCount={totalItems}
-            hiddenSeriesCount={this.props.hiddenItems}
+            hiddenSeriesCount={hiddenItems}
           />
         </LegendTableCell>
 
@@ -149,6 +118,7 @@ export class LegendListItem extends Component<LegendItemProps> {
           </LegendTableCell>
         )}
       </LegendTableRow>
-    );
-  }
-}
+      {renderColorPickerPopup()}
+    </>
+  );
+};

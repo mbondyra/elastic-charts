@@ -7,6 +7,7 @@
  */
 
 import { LegendItemExtraValues, LegendValue } from '../../common/legend';
+import { SeriesIdentifier } from '../../common/series_id';
 import {
   LegendItemListener,
   BasicListener,
@@ -19,11 +20,7 @@ import {
   setTemporaryColor as setTemporaryColorAction,
   setPersistedColor as setPersistedColorAction,
 } from '../../state/actions/colors';
-import {
-  onLegendItemOutAction,
-  onLegendItemOverAction,
-  onToggleDeselectSeriesAction,
-} from '../../state/actions/legend';
+import { LegendPath, onToggleDeselectSeriesAction } from '../../state/actions/legend';
 import { LegendLabelOptions } from '../../utils/themes/theme';
 
 /** @internal */
@@ -38,10 +35,8 @@ export interface SharedLegendItemProps {
   colorPicker?: LegendColorPicker;
   action?: LegendAction;
   onClick?: LegendItemListener;
-  onMouseOut?: BasicListener;
-  onMouseOver?: LegendItemListener;
-  mouseOutAction: typeof onLegendItemOutAction;
-  mouseOverAction: typeof onLegendItemOverAction;
+  onLegendItemMouseOver: (seriesIdentifiers: SeriesIdentifier[], path: LegendPath) => void;
+  onLegendItemMouseOut: BasicListener;
   clearTemporaryColorsAction: typeof clearTemporaryColorsAction;
   setTemporaryColorAction: typeof setTemporaryColorAction;
   setPersistedColorAction: typeof setPersistedColorAction;

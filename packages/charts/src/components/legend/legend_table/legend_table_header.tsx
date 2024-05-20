@@ -38,7 +38,7 @@ export const LegendTableHeader = ({
 
   return (
     <div role="rowgroup" className="echLegendTable__rowgroup echLegendTable__header">
-      <LegendTableRow className="echLegendSingleItem echLegendSingleItem--vertical" dir={isMostlyRTL ? 'rtl' : 'ltr'}>
+      <LegendTableRow className="echLegendTable__item echLegendTable__item--vertical" dir={isMostlyRTL ? 'rtl' : 'ltr'}>
         <LegendTableCell className="echLegend__colorWrapper echLegendTable__colorCell"></LegendTableCell>
         <LegendTableCell>{legendTitle}</LegendTableCell>
         {legendValues.map((l) => (

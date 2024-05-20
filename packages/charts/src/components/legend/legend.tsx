@@ -7,7 +7,7 @@
  */
 
 import classNames from 'classnames';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch, bindActionCreators } from 'redux';
 
@@ -17,12 +17,14 @@ import { LegendTable } from './legend_table';
 import { getLegendPositionConfig, legendPositionStyle } from './position_style';
 import { getLegendStyle, getLegendListStyle } from './style_utils';
 import { LegendItem, LegendItemExtraValues, LegendValue } from '../../common/legend';
+import { SeriesIdentifier } from '../../common/series_id';
 import { DEFAULT_LEGEND_CONFIG, LegendSpec } from '../../specs';
 import { clearTemporaryColors, setTemporaryColor, setPersistedColor } from '../../state/actions/colors';
 import {
   onToggleDeselectSeriesAction,
   onLegendItemOutAction,
   onLegendItemOverAction,
+  LegendPath,
 } from '../../state/actions/legend';
 import { GlobalChartState } from '../../state/chart_state';
 import { getChartThemeSelector } from '../../state/selectors/get_chart_theme';
@@ -73,6 +75,28 @@ function LegendComponent(props: LegendStateProps & LegendDispatchProps) {
     config,
   } = props;
 
+  const { onLegendItemOut, onLegendItemOver } = config;
+  const { onItemOutAction, onItemOverAction } = props;
+
+  const onLegendItemMouseOver = useCallback(
+    (seriesIdentifiers: SeriesIdentifier[], path: LegendPath) => {
+      // call the settings listener directly if available
+      if (onLegendItemOver) {
+        onLegendItemOver(seriesIdentifiers);
+      }
+      onItemOverAction(path);
+    },
+    [onItemOverAction, onLegendItemOver],
+  );
+
+  const onLegendItemMouseOut = useCallback(() => {
+    // call the settings listener directly if available
+    if (onLegendItemOut) {
+      onLegendItemOut();
+    }
+    onItemOutAction();
+  }, [onLegendItemOut, onItemOutAction]);
+
   if (items.every(({ isItemHidden }) => isItemHidden)) {
     return null;
   }
@@ -100,14 +124,12 @@ function LegendComponent(props: LegendStateProps & LegendDispatchProps) {
     hiddenItems: items.filter(({ isSeriesHidden }) => isSeriesHidden).length,
     extraValues: props.extraValues,
     legendValues: config.legendValues,
-    onMouseOut: config.onLegendItemOut,
-    onMouseOver: config.onLegendItemOver,
+    onLegendItemMouseOver,
+    onLegendItemMouseOut,
     onClick: config.onLegendItemClick,
     clearTemporaryColorsAction: props.clearTemporaryColors,
     setPersistedColorAction: props.setPersistedColor,
     setTemporaryColorAction: props.setTemporaryColor,
-    mouseOutAction: props.onItemOutAction,
-    mouseOverAction: props.onItemOverAction,
     toggleDeselectSeriesAction: props.onToggleDeselectSeriesAction,
     colorPicker: config.legendColorPicker,
     action: config.legendAction,
@@ -129,8 +151,8 @@ function LegendComponent(props: LegendStateProps & LegendDispatchProps) {
               seriesIdentifiers,
               path,
               extraValue: itemProps.extraValues.get(seriesIdentifiers[0]?.key ?? '')?.get(childId ?? ''),
-              onItemOutAction: itemProps.mouseOutAction,
-              onItemOverActon: () => itemProps.mouseOverAction(path),
+              onItemOutAction,
+              onItemOverActon: () => onItemOverAction(path),
               onItemClickAction: (negate: boolean) => itemProps.toggleDeselectSeriesAction(seriesIdentifiers, negate),
             }))}
           />

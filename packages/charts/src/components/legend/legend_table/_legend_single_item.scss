@@ -1,7 +1,7 @@
 @import '../variables';
 @import '../../mixins';
 
-.echLegendSingleItem {
+.echLegendTable__item {
   color: $euiTextColor;
 
   &:last-child .echLegendTable__cell {
