@@ -51,14 +51,6 @@ Click: ${showSeriesMessage}
 ${modifierKey} + click: ${showSeriesMessage}`;
 }
 
-const getClassNames = (maxLines: number, isToggleable?: boolean) => {
-  return classNames('echLegendItem__label', {
-    'echLegendItem__label--clickable': Boolean(isToggleable),
-    'echLegendItem__label--singleline': maxLines === 1,
-    'echLegendItem__label--multiline': maxLines > 1,
-  });
-};
-
 /**
  * Label component used to display text in legend item
  * @internal
@@ -120,6 +112,14 @@ export function NonInteractiveLabel({ label, options }: { label: string; options
     </div>
   );
 }
+
+const getClassNames = (maxLines: number, isToggleable?: boolean) => {
+  return classNames('echLegendItem__label', {
+    'echLegendItem__label--clickable': Boolean(isToggleable),
+    'echLegendItem__label--singleline': maxLines === 1,
+    'echLegendItem__label--multiline': maxLines > 1,
+  });
+};
 
 function getSharedProps(label: string, options: LegendLabelOptions) {
   const maxLines = Math.abs(options.maxLines);

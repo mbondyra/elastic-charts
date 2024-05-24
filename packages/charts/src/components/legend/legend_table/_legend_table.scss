@@ -54,11 +54,15 @@
   }
 
   &--horizontal {
+    .echLegendTable__container {
+      margin-top: $echLegendRowGap/2;
+      margin-bottom:$echLegendRowGap/2;
+    }
     .echLegendTable {
       padding-left: $echLegendRowGap;
       padding-right: $echLegendRowGap;
-      margin-top: $echLegendRowGap;
-      margin-bottom: $echLegendRowGap;
+      margin-top: $echLegendRowGap/2;
+      margin-bottom: $echLegendRowGap/2;
     }
   }
 }

@@ -171,13 +171,11 @@ function getLegendTableSize(
       position: legendPosition,
     };
   }
-  const isSingleLine = (parentDimensions.width - 20) / 200 > items.length;
-  const singleLineHeight = bbox.height + GRID_CELL_PADDING.height * 2;
+  const visibleLinesNumber = Math.min(items.length + 1, HORIZONTAL_GRID_LINE_NUMBER);
+  const singleLineHeight = bbox.height + GRID_CELL_PADDING.height * 2 + 1;
   const height = Number.isFinite(legendSize)
     ? Math.min(legendSize, parentDimensions.height * 0.7)
-    : isSingleLine
-      ? singleLineHeight + GRID_MARGIN
-      : singleLineHeight * HORIZONTAL_GRID_LINE_NUMBER + GRID_MARGIN;
+    : singleLineHeight * visibleLinesNumber + GRID_MARGIN;
 
   return {
     height,
