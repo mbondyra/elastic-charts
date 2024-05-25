@@ -10,6 +10,7 @@ import React from 'react';
 
 import { LegendTableCell } from './legend_table_cell';
 import { LegendTableRow } from './legend_table_row';
+import { LegendValueComponent } from './legend_value';
 import { legendValueTitlesMap } from '../../../chart_types/xy_chart/state/utils/get_legend_values';
 import { LegendValue } from '../../../common/legend';
 import { LegendLabelOptions } from '../../../utils/themes/theme';
@@ -43,8 +44,8 @@ export const LegendTableHeader = ({
           <NonInteractiveLabel label={legendTitle} options={labelOptions} />
         </LegendTableCell>
         {legendValues.map((l) => (
-          <LegendTableCell className="echLegend__legendValue" key={l}>
-            {legendValueTitlesMap[l]}
+          <LegendTableCell key={l}>
+            <LegendValueComponent label={legendValueTitlesMap[l]} />
           </LegendTableCell>
         ))}
         {hasAction && <LegendTableCell />}

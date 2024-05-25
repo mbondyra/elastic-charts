@@ -9,6 +9,7 @@
 import { getChartThemeSelector } from './get_chart_theme';
 import { getLegendConfigSelector } from './get_legend_config_selector';
 import { getLegendItemsSelector } from './get_legend_items';
+import { legendValueTitlesMap } from '../../chart_types/xy_chart/state/utils/get_legend_values';
 import { DEFAULT_FONT_FAMILY } from '../../common/default_theme_attributes';
 import { LegendItem, shouldDisplayTable } from '../../common/legend';
 import { LEGEND_HIERARCHY_MARGIN } from '../../components/legend/legend_item';
@@ -120,28 +121,80 @@ function getLegendTableSize(
 ): LegendSizing {
   const { legendSize, legendValues, legendPosition, legendAction } = config;
 
-  const bbox = withTextMeasure((textMeasure) =>
-    items.reduce(
-      (acc, { label, values }) => {
-        const legendValuesText = values.map((v) => v.label).join('');
+  const colorPickerWidth = GRID_COLOR_PICKER_WIDTH;
 
-        const seriesText = `${label}${legendValuesText}`;
-        const { width, height } = textMeasure(
-          seriesText,
-          { fontFamily: DEFAULT_FONT_FAMILY, fontVariant: 'normal', fontWeight: 400, fontStyle: 'normal' },
-          12,
-          1.34,
-        );
-        acc.width = Math.max(
-          acc.width,
-          GRID_COLOR_PICKER_WIDTH + width + (values.length + 1) * GRID_CELL_PADDING.width,
-        );
+  const actionWidth = isDefined(legendAction) ? GRID_ACTION_WIDTH : 0;
+
+  console.log('colorPickerWidth', [
+    {
+      label: config.legendTitle || '',
+      values: config.legendValues.map((v) => ({
+        label: legendValueTitlesMap[v],
+      })),
+    },
+    ...items,
+  ]);
+
+  const labelBbox = withTextMeasure((textMeasure) =>
+    [
+      {
+        label: config.legendTitle || '',
+        values: config.legendValues.map((v) => ({
+          label: legendValueTitlesMap[v],
+        })),
+      },
+      ...items,
+    ].reduce(
+      (acc, { label, values }) => {
+        let height = 0;
+        const gridCells = [label, ...values.map((v) => v.label)];
+        const gridCellsWidths = gridCells.map((l) => {
+          const { width, height: h } = textMeasure(
+            l,
+            {
+              fontFamily: DEFAULT_FONT_FAMILY,
+              fontVariant: 'normal',
+              fontWeight: 400,
+              fontStyle: 'normal',
+              // fontFeatureSettings: 'tnum',
+            },
+            12,
+            1.34,
+          );
+          height = h;
+          return width;
+        });
+
+        for (let i = 0; i < acc.gridCellsWidths.length; i++) {
+          acc.gridCellsWidths[i] = Math.max(acc.gridCellsWidths[i], gridCellsWidths[i]);
+          console.log('tnum', gridCellsWidths[i]);
+        }
         acc.height = Math.max(acc.height, height);
         return acc;
       },
-      { width: 0, height: 0 },
+      { gridCellsWidths: [0, ...config.legendValues.map(() => 0)], height: 0 },
     ),
   );
+
+  const bboxWidth = labelBbox.gridCellsWidths.reduce((acc, w) => acc + w + GRID_CELL_PADDING.width, 0);
+
+  // const bbox = withTextMeasure((textMeasure) =>
+  //   items.reduce((acc, { label, values }) => {
+  //     const legendValuesText = values.map((v) => v.label).join('');
+
+  //     const seriesText = `${label}${legendValuesText}`;
+  //     const { width, height } = textMeasure(
+  //       seriesText,
+  //       { fontFamily: DEFAULT_FONT_FAMILY, fontVariant: 'normal', fontWeight: 400, fontStyle: 'normal' },
+  //       12,
+  //       1.34,
+  //     );
+  //     acc.width = Math.max(acc.width, GRID_COLOR_PICKER_WIDTH + width + (values.length + 1) * GRID_CELL_PADDING.width);
+  //     acc.height = Math.max(acc.height, height);
+  //     return acc;
+  //   }, headerBbox),
+  // );
+  // console.log(bbox);
 
   const {
     legend: { verticalWidth, spacingBuffer, margin },
@@ -149,20 +202,23 @@ function getLegendTableSize(
 
   const actionDimension = isDefined(legendAction) ? GRID_ACTION_WIDTH : 0; // max width plus margin
   // COLOR PICKER - LABEL - VALUES - ACTION
-  const legendItemWidth =
-    GRID_COLOR_PICKER_WIDTH + bbox.width + (legendValues.length + 1) * GRID_CELL_PADDING.width + actionDimension;
+  const legendItemWidth = GRID_COLOR_PICKER_WIDTH + bboxWidth + +actionDimension;
+  console.log('legendItemWidth', legendItemWidth);
 
   if (legendPosition.direction === LayoutDirection.Vertical) {
-    const legendItemHeight = bbox.height + VERTICAL_PADDING * 2;
+    const legendItemHeight = labelBbox.height + VERTICAL_PADDING * 2;
     const legendHeight = legendItemHeight * items.length + TOP_MARGIN;
     const scrollBarDimension = legendHeight > parentDimensions.height ? SCROLL_BAR_WIDTH : 0;
     const staticWidth = spacingBuffer + actionDimension + scrollBarDimension;
+    console.log('legendItemWidth', legendItemWidth, staticWidth);
 
     const maxAvailableWidth = parentDimensions.width * 0.5;
 
     const width = Number.isFinite(legendSize)
       ? Math.min(Math.max(legendSize, legendItemWidth * 0.3 + staticWidth), maxAvailableWidth)
       : Math.floor(Math.min(legendItemWidth + staticWidth, maxAvailableWidth));
+
+    console.log('width', width);
 
     return {
       width,
@@ -172,7 +228,7 @@ function getLegendTableSize(
     };
   }
   const visibleLinesNumber = Math.min(items.length + 1, HORIZONTAL_GRID_LINE_NUMBER);
-  const singleLineHeight = bbox.height + GRID_CELL_PADDING.height * 2 + 1;
+  const singleLineHeight = labelBbox.height + GRID_CELL_PADDING.height * 2 + 1;
   const height = Number.isFinite(legendSize)
     ? Math.min(legendSize, parentDimensions.height * 0.7)
     : singleLineHeight * visibleLinesNumber + GRID_MARGIN;
