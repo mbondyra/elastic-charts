@@ -25,7 +25,7 @@ const COLOR_DOT_CHECK_WIDTH = '10px';
 export function LegendTable({ items, ...itemProps }: LegendTableProps) {
   const gridRowLength = (itemProps.action ? 1 : 0) + (items?.[0]?.values.length ?? 0);
   const gridTemplateColumns = {
-    vertical: `${COLOR_DOT_CHECK_WIDTH} minmax(auto, 50%) repeat(${gridRowLength}, auto)`,
+    vertical: `${COLOR_DOT_CHECK_WIDTH} minmax(30%, auto) repeat(${gridRowLength}, auto)`,
     horizontal: `${COLOR_DOT_CHECK_WIDTH} minmax(auto, 75%) repeat(${gridRowLength}, auto)`,
   };
   return (

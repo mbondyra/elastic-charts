@@ -8,10 +8,8 @@
 
 import React from 'react';
 
-import { LegendItemValue } from '../../../common/legend';
-
 /** @internal */
-export const LegendValueComponent = ({ label }: LegendItemValue) => {
+export const LegendValueComponent = ({ label }: { label: string }) => {
   return (
     <div className="echLegend__legendValue" title={`${label}`}>
       <span>{label}</span>
