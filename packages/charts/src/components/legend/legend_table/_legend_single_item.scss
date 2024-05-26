@@ -5,7 +5,9 @@
   color: $euiTextColor;
 
   .echLegendItem__action {
-    height: inherit;
+    padding-top: $euiSizeXS / 2;
+    max-width: 16px;
+    height: $echLegendRowHeight;
   }
 
   &:last-child .echLegendTable__cell {

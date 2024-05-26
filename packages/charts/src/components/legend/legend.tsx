@@ -157,7 +157,7 @@ function LegendComponent(props: LegendStateProps & LegendDispatchProps) {
           />
         </div>
       ) : shouldDisplayTable(itemProps.legendValues) ? (
-        <div style={containerStyle}>
+        <div style={containerStyle} className="echLegendTable__container">
           <LegendTable items={items} {...itemProps} />
         </div>
       ) : (

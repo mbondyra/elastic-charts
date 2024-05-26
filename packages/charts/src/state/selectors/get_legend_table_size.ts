@@ -27,6 +27,7 @@ const HORIZONTAL_GRID_LINE_NUMBER = 3;
 const GRID_COLOR_PICKER_WIDTH = 10;
 const GRID_ACTION_WIDTH = 26;
 const MONO_LETTER_WIDTH = 7.77;
+const DOT_WIDTH = 4.5;
 
 const fontStyle: Font = {
   textColor: 'black',
@@ -56,10 +57,7 @@ export function getLegendTableSize(
 
   const headerBbox = withTextMeasure((textMeasure) => {
     const { width: labelWidth, height } = textMeasure(config.legendTitle || '', headerFontStyle, 12, 1.34);
-    const valuesWidths = legendValues.map((v) => {
-      const { width } = textMeasure(legendValueTitlesMap[v], fontStyle, 12, 1.34);
-      return width;
-    });
+    const valuesWidths = legendValues.map((v) => textMeasure(legendValueTitlesMap[v], fontStyle, 12, 1.34).width);
     return { labelWidth, valuesWidths, height };
   });
 
@@ -72,13 +70,13 @@ export function getLegendTableSize(
 
   const widestValuesWidths = items.reduce((acc, { values }) => {
     const valuesWidths = values.map((v) =>
-      v.label.includes('.') ? v.label.length * MONO_LETTER_WIDTH - 3 : v.label.length * MONO_LETTER_WIDTH,
+      v.label.includes('.') ? (v.label.length - 1) * MONO_LETTER_WIDTH + DOT_WIDTH : v.label.length * MONO_LETTER_WIDTH,
     );
     return acc.map((w, i) => Math.max(w, valuesWidths[i] || 0));
   }, headerBbox.valuesWidths);
 
   const legendItemWidth =
-    widestLabelWidth +
+    Math.max(widestLabelWidth, 40) +
     GRID_CELL_PADDING.width * 2 +
     widestValuesWidths.reduce((acc, w) => acc + w + GRID_CELL_PADDING.width * 2, 0);
 
