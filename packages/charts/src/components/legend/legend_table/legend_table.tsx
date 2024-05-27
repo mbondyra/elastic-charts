@@ -29,11 +29,11 @@ export const MIN_LABEL_WIDTH = 24;
 
 /** @internal */
 export function LegendTable({ items, seriesWidth = MIN_LABEL_WIDTH, ...itemProps }: LegendTableProps) {
-  const legendValuesLength = items?.[0]?.values.length ? `repeat(${items?.[0]?.values.length}, auto)` : '';
+  const legendValuesLength = items?.[0]?.values.length ? `repeat(${items?.[0]?.values.length}, 1fr)` : '';
   const actionComponentWidth = itemProps.action ? `${GRID_ACTION_WIDTH}px` : '';
   const gridTemplateColumns = {
     vertical: `${GRID_COLOR_WIDTH}px minmax(${seriesWidth}px, auto) ${legendValuesLength} ${actionComponentWidth}`,
-    horizontal: `${GRID_COLOR_WIDTH}px minmax(auto, 75%) ${legendValuesLength} ${actionComponentWidth}`,
+    horizontal: `${GRID_COLOR_WIDTH}px minmax(${seriesWidth}px, auto) ${legendValuesLength} ${actionComponentWidth}`,
   };
   return (
     <div

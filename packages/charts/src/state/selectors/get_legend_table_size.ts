@@ -85,10 +85,9 @@ export function getLegendTableSize(
     return acc.map((w, i) => Math.max(w, valuesWidths[i] || 0));
   }, headerBbox.valuesWidths);
 
-  const legendItemWidth =
-    widestLabelWidth +
-    GRID_CELL_PADDING.width * 2 +
-    widestValuesWidths.reduce((acc, w) => acc + w + GRID_CELL_PADDING.width * 2, 0);
+  const seriesWidth = Math.ceil(widestLabelWidth + GRID_CELL_PADDING.width * 2);
+
+  const legendItemWidth = seriesWidth + widestValuesWidths.reduce((acc, w) => acc + w + GRID_CELL_PADDING.width * 2, 0);
 
   const {
     legend: { verticalWidth, spacingBuffer, margin },
@@ -97,28 +96,22 @@ export function getLegendTableSize(
   const actionWidth = isDefined(legendAction) ? GRID_ACTION_WIDTH : 0;
 
   if (legendPosition.direction === LayoutDirection.Vertical) {
+    const maxAvailableWidth = parentDimensions.width * 0.5;
     const legendItemHeight = height + VERTICAL_PADDING * 2;
     const legendHeight = legendItemHeight * items.length + TOP_MARGIN;
     const scrollBarDimension = legendHeight > parentDimensions.height ? SCROLL_BAR_WIDTH : 0;
     const staticWidth = GRID_COLOR_WIDTH + GRID_MARGIN * 2 + actionWidth + scrollBarDimension;
 
-    const maxAvailableWidth = parentDimensions.width * 0.5;
-
     const width = Number.isFinite(legendSize)
       ? Math.min(Math.max(legendSize, legendItemWidth * 0.3 + staticWidth), maxAvailableWidth)
-      : Math.floor(Math.min(legendItemWidth + staticWidth, maxAvailableWidth));
+      : Math.ceil(Math.min(legendItemWidth + staticWidth, maxAvailableWidth));
 
     return {
       height: legendHeight,
       width,
       margin,
       position: legendPosition,
-      seriesWidth: Math.floor(
-        Math.min(
-          widestLabelWidth + GRID_CELL_PADDING.width * 2,
-          (Number.isFinite(legendSize) ? legendSize : maxAvailableWidth) / 2,
-        ),
-      ),
+      seriesWidth: Math.min(seriesWidth, (Number.isFinite(legendSize) ? legendSize : maxAvailableWidth) / 2),
     };
   }
 
