@@ -77,7 +77,7 @@ export const LegendListItem: React.FC<LegendItemProps> = (props) => {
   if (isItemHidden) return null;
 
   const ActionComponent = Action ? <Action series={seriesIdentifiers} color={color} label={label} /> : null;
-
+  console.log('ActionComponent', ActionComponent);
   return (
     <>
       <LegendTableRow

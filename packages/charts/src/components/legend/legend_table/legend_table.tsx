@@ -30,7 +30,7 @@ export const MIN_LABEL_WIDTH = 40;
 export function LegendTable({ items, ...itemProps }: LegendTableProps) {
   const gridRowLength = (itemProps.action ? 1 : 0) + (items?.[0]?.values.length ?? 0);
   const gridTemplateColumns = {
-    vertical: `${GRID_COLOR_PICKER_WIDTH}px minmax(50%, auto) repeat(${gridRowLength}, auto)`,
+    vertical: `${GRID_COLOR_PICKER_WIDTH}px minmax(${MIN_LABEL_WIDTH}px, auto) repeat(${gridRowLength}, auto)`,
     horizontal: `${GRID_COLOR_PICKER_WIDTH}px minmax(auto, 75%) repeat(${gridRowLength}, auto)`,
   };
   return (
