@@ -70,7 +70,10 @@ export function getLegendTableSize(
   });
 
   const widestLabelWidth = withTextMeasure((textMeasure) =>
-    items.reduce((acc, { label }) => Math.max(acc, textMeasure(label, ...fontArgs).width), headerBbox.labelWidth),
+    items.reduce(
+      (acc, { label }) => Math.max(acc, textMeasure(label, ...fontArgs).width),
+      Math.max(headerBbox.labelWidth, MIN_LABEL_WIDTH),
+    ),
   );
 
   const widestValuesWidths = items.reduce((acc, { values }) => {
@@ -83,7 +86,7 @@ export function getLegendTableSize(
   }, headerBbox.valuesWidths);
 
   const legendItemWidth =
-    Math.max(widestLabelWidth, MIN_LABEL_WIDTH) +
+    widestLabelWidth +
     GRID_CELL_PADDING.width * 2 +
     widestValuesWidths.reduce((acc, w) => acc + w + GRID_CELL_PADDING.width * 2, 0);
 
@@ -110,6 +113,7 @@ export function getLegendTableSize(
       width,
       margin,
       position: legendPosition,
+      seriesWidth: Math.min(widestLabelWidth, maxAvailableWidth / 2),
     };
   }
 

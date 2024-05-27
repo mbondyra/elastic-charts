@@ -17,6 +17,7 @@ import { SharedLegendItemProps } from '../types';
 /** @internal */
 export interface LegendTableProps extends SharedLegendItemProps {
   items: LegendItem[];
+  seriesWidth?: number;
 }
 
 /** @internal */
@@ -27,10 +28,10 @@ export const GRID_ACTION_WIDTH = 26;
 export const MIN_LABEL_WIDTH = 40;
 
 /** @internal */
-export function LegendTable({ items, ...itemProps }: LegendTableProps) {
+export function LegendTable({ items, seriesWidth = MIN_LABEL_WIDTH, ...itemProps }: LegendTableProps) {
   const gridRowLength = (itemProps.action ? 1 : 0) + (items?.[0]?.values.length ?? 0);
   const gridTemplateColumns = {
-    vertical: `${GRID_COLOR_PICKER_WIDTH}px minmax(${MIN_LABEL_WIDTH}px, auto) repeat(${gridRowLength}, auto)`,
+    vertical: `${GRID_COLOR_PICKER_WIDTH}px minmax(${seriesWidth}px, auto) repeat(${gridRowLength}, auto)`,
     horizontal: `${GRID_COLOR_PICKER_WIDTH}px minmax(auto, 75%) repeat(${gridRowLength}, auto)`,
   };
   return (

@@ -36,6 +36,7 @@ export const TOP_MARGIN = 2;
 export type LegendSizing = Size & {
   margin: number;
   position: LegendPositionConfig;
+  seriesWidth?: number;
 };
 
 /** @internal */

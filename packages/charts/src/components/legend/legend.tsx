@@ -48,7 +48,7 @@ interface LegendStateProps {
   chartDimensions: Dimensions;
   containerDimensions: Dimensions;
   chartTheme: Theme;
-  size: Size;
+  size: Size & { seriesWidth?: number };
   config: LegendSpec;
   items: LegendItem[];
   extraValues: Map<string, LegendItemExtraValues>;
@@ -158,7 +158,7 @@ function LegendComponent(props: LegendStateProps & LegendDispatchProps) {
         </div>
       ) : shouldDisplayTable(itemProps.legendValues) ? (
         <div style={containerStyle} className="echLegendTable__container">
-          <LegendTable items={items} {...itemProps} />
+          <LegendTable items={items} {...itemProps} seriesWidth={size.seriesWidth} />
         </div>
       ) : (
         <div style={containerStyle} className="echLegendListContainer">
