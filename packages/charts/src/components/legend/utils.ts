@@ -17,9 +17,7 @@ export function getExtra(
   const { seriesIdentifiers, values, childId, path } = item;
   // don't show extra if the legend item is associated with multiple series
   if (extraValues.size === 0 || seriesIdentifiers.length > 1 || !seriesIdentifiers[0]) {
-    return values.length > 0
-      ? { label: `${values[0]?.label ?? ''}`, value: values[0]?.value ?? null, type: LegendValue.CurrentAndLastValue }
-      : undefined;
+    return values.find((v) => v.type === LegendValue.CurrentAndLastValue);
   }
   const [{ key }] = seriesIdentifiers;
   const extraValueKey = path.map(({ index }) => index).join('__');
@@ -27,7 +25,7 @@ export function getExtra(
   const actionExtra = childId !== undefined ? itemExtraValues?.get(childId) : undefined;
   return actionExtra
     ? actionExtra
-    : extraValues.size === totalItems && values.length > 0
-      ? { label: `${values[0]?.label ?? ''}`, value: values[0]?.value ?? null, type: LegendValue.CurrentAndLastValue }
+    : extraValues.size === totalItems
+      ? values.find((v) => v.type === LegendValue.CurrentAndLastValue)
       : undefined;
 }

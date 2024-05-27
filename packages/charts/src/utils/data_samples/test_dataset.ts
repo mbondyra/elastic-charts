@@ -164,7 +164,7 @@ export const TIME_CHART_2Y0G = [
 ];
 
 export const SHORT_NAMES_BARCHART = [
-  { x: 0, g: 'a', y: 1 },
+  { x: 0, g: '56,988,62s', y: 1 },
   { x: 0, g: 'b', y: 1 },
   { x: 0, g: 'c', y: 3 },
   { x: 0, g: 'd', y: 3 },

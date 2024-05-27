@@ -21,7 +21,7 @@ import { isDefined, LayoutDirection } from '../../utils/common';
 import { Dimensions } from '../../utils/dimensions';
 import { Theme } from '../../utils/themes/theme';
 
-const MONO_LETTER_WIDTH = 7.77;
+const MONO_LETTER_WIDTH = 7.8;
 const MONO_SEPARATOR_WIDTH = 4.5;
 
 const SCROLL_BAR_WIDTH = 16; // ~1em
@@ -48,7 +48,7 @@ const fontArgs: [Font, number, number] = [
 const headerFontArgs: [Font, number, number] = [
   {
     ...fontArgs[0],
-    fontWeight: 500,
+    fontWeight: 600,
   },
   fontArgs[1],
   fontArgs[2],
@@ -61,6 +61,10 @@ export function getLegendTableSize(
   parentDimensions: Dimensions,
   items: LegendItem[],
 ): LegendSizing {
+  const {
+    legend: { verticalWidth, spacingBuffer, margin },
+  } = theme;
+
   const { legendSize, legendValues, legendPosition, legendAction } = config;
 
   const { height, ...headerBbox } = withTextMeasure((textMeasure) => {
@@ -82,16 +86,12 @@ export function getLegendTableSize(
         ? (v.label.length - 1) * MONO_LETTER_WIDTH + MONO_SEPARATOR_WIDTH
         : v.label.length * MONO_LETTER_WIDTH,
     );
-    return acc.map((w, i) => Math.max(w, valuesWidths[i] || 0));
+    return acc.map((w, i) => Math.ceil(Math.max(w, valuesWidths[i] || 0)));
   }, headerBbox.valuesWidths);
 
   const seriesWidth = Math.ceil(widestLabelWidth + GRID_CELL_PADDING.width * 2);
 
   const legendItemWidth = seriesWidth + widestValuesWidths.reduce((acc, w) => acc + w + GRID_CELL_PADDING.width * 2, 0);
-
-  const {
-    legend: { verticalWidth, spacingBuffer, margin },
-  } = theme;
 
   const actionWidth = isDefined(legendAction) ? GRID_ACTION_WIDTH : 0;
 
