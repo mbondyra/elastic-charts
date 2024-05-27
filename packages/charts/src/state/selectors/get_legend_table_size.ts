@@ -13,7 +13,7 @@ import { LegendItem, legendValueTitlesMap } from '../../common/legend';
 import { Font } from '../../common/text_utils';
 import {
   GRID_ACTION_WIDTH,
-  GRID_COLOR_PICKER_WIDTH,
+  GRID_COLOR_WIDTH,
   MIN_LABEL_WIDTH,
 } from '../../components/legend/legend_table/legend_table';
 import { withTextMeasure } from '../../utils/bbox/canvas_text_bbox_calculator';
@@ -22,7 +22,7 @@ import { Dimensions } from '../../utils/dimensions';
 import { Theme } from '../../utils/themes/theme';
 
 const MONO_LETTER_WIDTH = 7.77;
-const MONO_LETTER_DOT_WIDTH = 4.5;
+const MONO_SEPARATOR_WIDTH = 4.5;
 
 const SCROLL_BAR_WIDTH = 16; // ~1em
 const VERTICAL_PADDING = 4;
@@ -79,7 +79,7 @@ export function getLegendTableSize(
   const widestValuesWidths = items.reduce((acc, { values }) => {
     const valuesWidths = values.map((v) =>
       v.label.includes('.')
-        ? (v.label.length - 1) * MONO_LETTER_WIDTH + MONO_LETTER_DOT_WIDTH
+        ? (v.label.length - 1) * MONO_LETTER_WIDTH + MONO_SEPARATOR_WIDTH
         : v.label.length * MONO_LETTER_WIDTH,
     );
     return acc.map((w, i) => Math.max(w, valuesWidths[i] || 0));
@@ -100,7 +100,7 @@ export function getLegendTableSize(
     const legendItemHeight = height + VERTICAL_PADDING * 2;
     const legendHeight = legendItemHeight * items.length + TOP_MARGIN;
     const scrollBarDimension = legendHeight > parentDimensions.height ? SCROLL_BAR_WIDTH : 0;
-    const staticWidth = GRID_COLOR_PICKER_WIDTH + GRID_MARGIN * 2 + actionWidth + scrollBarDimension;
+    const staticWidth = GRID_COLOR_WIDTH + GRID_MARGIN * 2 + actionWidth + scrollBarDimension;
 
     const maxAvailableWidth = parentDimensions.width * 0.5;
 
@@ -113,7 +113,7 @@ export function getLegendTableSize(
       width,
       margin,
       position: legendPosition,
-      seriesWidth: Math.min(widestLabelWidth, maxAvailableWidth / 2),
+      seriesWidth: Math.floor(Math.min(widestLabelWidth + GRID_CELL_PADDING.width * 2, maxAvailableWidth / 2)),
     };
   }
 

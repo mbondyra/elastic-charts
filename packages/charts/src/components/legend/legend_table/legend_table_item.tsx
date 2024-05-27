@@ -47,6 +47,7 @@ export const LegendListItem: React.FC<LegendItemProps> = (props) => {
     hiddenItems,
   } = props;
   const { color, isSeriesHidden, isItemHidden, seriesIdentifiers, label, path, isToggleable } = item;
+  console.log('LegendListItem: item', label, item);
 
   const itemClassNames = classNames('echLegendTable__item', 'echLegendTable__item--highlightable', {
     'echLegendTable__item--hidden': isSeriesHidden,
@@ -77,7 +78,7 @@ export const LegendListItem: React.FC<LegendItemProps> = (props) => {
   if (isItemHidden) return null;
 
   const ActionComponent = Action ? <Action series={seriesIdentifiers} color={color} label={label} /> : null;
-  console.log('ActionComponent', ActionComponent);
+
   return (
     <>
       <LegendTableRow
