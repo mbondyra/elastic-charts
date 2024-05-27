@@ -113,7 +113,12 @@ export function getLegendTableSize(
       width,
       margin,
       position: legendPosition,
-      seriesWidth: Math.floor(Math.min(widestLabelWidth + GRID_CELL_PADDING.width * 2, maxAvailableWidth / 2)),
+      seriesWidth: Math.floor(
+        Math.min(
+          widestLabelWidth + GRID_CELL_PADDING.width * 2,
+          (Number.isFinite(legendSize) ? legendSize : maxAvailableWidth) / 2,
+        ),
+      ),
     };
   }
 
